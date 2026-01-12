@@ -1,0 +1,13 @@
+.idea/
+.vscode/
+.venv*/
+venv*/
+**/__pycache__/
+**/*.pyc
+build/
+android/
+src/temp/
+htmlcov/
+.pytest_cache/
+.coverage
+*.egg-info/
