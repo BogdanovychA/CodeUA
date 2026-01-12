@@ -3,17 +3,19 @@ name = "CodeUA"
 version = "0.1.0"
 description = "CodeUA for Ukrainian people"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = "==3.13"
 authors = [
     { name = "Andrii Bogdanovych", email = "a@bogdanovych.org" }
 ]
 dependencies = [
-  "flet>=0.80.1"
+  "flet>=0.80.1",
+  "flet-audio>=0.80.1"
 ]
 
 [dependency-groups]
 dev = [
   "flet[all]>=0.80.1",
+  "flet-audio>=0.80.1"
 ]
 
 [tool.flet]
