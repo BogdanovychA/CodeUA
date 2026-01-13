@@ -6,19 +6,10 @@ import flet as ft
 import flet_audio as fta
 
 from routes import about, error404, root, settings
-from utils import elements, utils
-from utils.config import TEXT_SIZE
+from utils import elements, storage, utils
+from utils.config import DEFAULT_ALARM_TIME, TEXT_SIZE, playlist
 
-playlist = {
-    "anthem": "/sounds/anthem_of_Ukraine.ogx",
-    "moment": "/sounds/moment_of_silence.mp3",
-}
-
-alarm_time = {
-    "hours": 12,
-    "minutes": 0,
-    "seconds": 48,
-}
+alarm_time = {}
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -140,7 +131,7 @@ def build_main_view(page: ft.Page) -> ft.View:
     )
 
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
     page.route = root.ROUTE
@@ -165,8 +156,23 @@ def main(page: ft.Page):
             top_view = page.views[-1]
             await page.push_route(top_view.route)
 
+    async def _init() -> None:
+
+        # await ft.SharedPreferences().clear()
+
+        global alarm_time
+        alarm_time = await storage.load_dict("alarm_time")
+
+        if not alarm_time:
+            await storage.save_dict("alarm_time", DEFAULT_ALARM_TIME)
+            alarm_time = await storage.load_dict("alarm_time")
+
+        # keys = await ft.SharedPreferences().get_keys("")
+
     page.on_route_change = route_change
     page.on_view_pop = view_pop
+
+    await _init()
 
     route_change()
 
