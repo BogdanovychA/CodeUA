@@ -26,3 +26,14 @@ async def load_dict(name: str) -> dict:
         return the_dict
     else:
         return {}
+
+
+async def clear() -> None:
+
+    # keys = await ft.SharedPreferences().get_keys("")
+    # print(keys)
+
+    await ft.SharedPreferences().clear()
+
+    # keys = await ft.SharedPreferences().get_keys("")
+    # print(keys)

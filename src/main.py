@@ -9,14 +9,14 @@ from routes import about, error404, root, settings
 from utils import elements, storage, utils
 from utils.config import DEFAULT_ALARM_TIME, TEXT_SIZE, playlist
 
-alarm_time = {}
-
 
 def build_main_view(page: ft.Page) -> ft.View:
 
     async def _check_time():
 
         while True:
+
+            alarm_time = page.session.store.get("alarm_time")
             hours, minutes, seconds = utils.check_delta(**alarm_time)
 
             if hours == minutes == seconds == 0:
@@ -45,7 +45,7 @@ def build_main_view(page: ft.Page) -> ft.View:
     def _set_volume(value: float):
         audio.volume += value
 
-    async def _switch(event: ft.Event):
+    async def _switch():
         await _pause()
         audio.src = playlist[switcher.value]
         # event.page.update()
@@ -158,16 +158,13 @@ async def main(page: ft.Page):
 
     async def _init() -> None:
 
-        # await ft.SharedPreferences().clear()
-
-        global alarm_time
         alarm_time = await storage.load_dict("alarm_time")
 
         if not alarm_time:
             await storage.save_dict("alarm_time", DEFAULT_ALARM_TIME)
             alarm_time = await storage.load_dict("alarm_time")
 
-        # keys = await ft.SharedPreferences().get_keys("")
+        page.session.store.set("alarm_time", alarm_time)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
