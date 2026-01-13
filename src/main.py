@@ -6,7 +6,7 @@ import flet as ft
 import flet_audio as fta
 
 from routes import about, error404, root, settings
-from utils import elements
+from utils import elements, utils
 from utils.config import TEXT_SIZE
 
 playlist = {
@@ -14,19 +14,41 @@ playlist = {
     "moment": "/sounds/moment_of_silence.mp3",
 }
 
+alarm_time = {
+    "hours": 12,
+    "minutes": 0,
+    "seconds": 48,
+}
+
 
 def build_main_view(page: ft.Page) -> ft.View:
 
+    async def _check_time():
+
+        while True:
+            hours, minutes, seconds = utils.check_delta(**alarm_time)
+
+            if hours == minutes == seconds == 0:
+                await _play()
+
+            time_left = f"{hours:02}:{minutes:02}:{seconds:02}"
+            timer.value = time_left
+            timer.update()
+            await asyncio.sleep(1)
+
     async def _play():
         player_control[2] = pause_button
+        controller.update()
         await audio.play()
 
     async def _pause():
         player_control[2] = resume_button
+        controller.update()
         await audio.pause()
 
     async def _resume():
         player_control[2] = pause_button
+        controller.update()
         await audio.resume()
 
     def _set_volume(value: float):
@@ -35,7 +57,7 @@ def build_main_view(page: ft.Page) -> ft.View:
     async def _switch(event: ft.Event):
         await _pause()
         audio.src = playlist[switcher.value]
-        event.page.update()
+        # event.page.update()
 
     switcher = ft.Dropdown(
         label="Композиція",
@@ -47,6 +69,8 @@ def build_main_view(page: ft.Page) -> ft.View:
         ],
         on_select=_switch,
     )
+
+    timer = ft.Text("", size=TEXT_SIZE)
 
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
     pause_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_pause)
@@ -65,6 +89,11 @@ def build_main_view(page: ft.Page) -> ft.View:
         volume_minus_button,
     ]
 
+    controller = ft.Row(
+        controls=player_control,
+        alignment=ft.MainAxisAlignment.CENTER,
+    )
+
     audio = fta.Audio(
         src=playlist[switcher.value],
         autoplay=False,
@@ -78,6 +107,9 @@ def build_main_view(page: ft.Page) -> ft.View:
     )
 
     page.title = root.TITLE
+
+    page.run_task(_check_time)
+
     return ft.View(
         route=root.ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -90,13 +122,13 @@ def build_main_view(page: ft.Page) -> ft.View:
                 height=200,
             ),
             ft.Text(""),
-            ft.Text("", size=TEXT_SIZE),
-            switcher,
-            ft.Text(""),
-            ft.Row(
-                controls=player_control,
-                alignment=ft.MainAxisAlignment.CENTER,
+            ft.Text(
+                "До вшанування пам'яті\nзагиблих героїв залишилося:", size=TEXT_SIZE
             ),
+            timer,
+            ft.Text(""),
+            switcher,
+            controller,
             ft.Text(""),
             ft.Button(
                 settings.TITLE,
@@ -140,4 +172,5 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
+
     ft.run(main, assets_dir="assets")
