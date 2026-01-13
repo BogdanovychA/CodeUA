@@ -10,7 +10,7 @@ from utils import elements, storage, utils
 from utils.config import DEFAULT_ALARM_TIME, TEXT_SIZE, playlist
 
 
-def build_main_view(page: ft.Page) -> ft.View:
+def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     async def _check_time():
 
@@ -85,17 +85,17 @@ def build_main_view(page: ft.Page) -> ft.View:
         alignment=ft.MainAxisAlignment.CENTER,
     )
 
-    audio = fta.Audio(
-        src=playlist[switcher.value],
-        autoplay=False,
-        volume=1,
-        balance=0,
-        # on_loaded=lambda _: print("Loaded"),
-        # on_duration_change=lambda e: print("Duration changed:", e.duration),
-        # on_position_change=lambda e: print("Position changed:", e.position),
-        # on_state_change=lambda e: print("State changed:", e.state),
-        # on_seek_complete=lambda _: print("Seek complete"),
-    )
+    # audio = fta.Audio(
+    #     src=playlist[switcher.value],
+    #     autoplay=False,
+    #     volume=1,
+    #     balance=0,
+    #     # on_loaded=lambda _: print("Loaded"),
+    #     # on_duration_change=lambda e: print("Duration changed:", e.duration),
+    #     # on_position_change=lambda e: print("Position changed:", e.position),
+    #     # on_state_change=lambda e: print("State changed:", e.state),
+    #     # on_seek_complete=lambda _: print("Seek complete"),
+    # )
 
     page.title = root.TITLE
 
@@ -138,7 +138,7 @@ async def main(page: ft.Page):
 
     def route_change():
         page.views.clear()
-        page.views.append(build_main_view(page))
+        page.views.append(build_main_view(page, audio))
         match page.route:
             case settings.ROUTE:
                 page.views.append(settings.build_view(page))
@@ -170,6 +170,18 @@ async def main(page: ft.Page):
     page.on_view_pop = view_pop
 
     await _init()
+
+    audio = fta.Audio(
+        src=playlist["moment"],
+        autoplay=False,
+        volume=1,
+        balance=0,
+        # on_loaded=lambda _: print("Loaded"),
+        # on_duration_change=lambda e: print("Duration changed:", e.duration),
+        # on_position_change=lambda e: print("Position changed:", e.position),
+        # on_state_change=lambda e: print("State changed:", e.state),
+        # on_seek_complete=lambda _: print("Seek complete"),
+    )
 
     route_change()
 

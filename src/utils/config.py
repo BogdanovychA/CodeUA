@@ -3,6 +3,7 @@
 import flet as ft
 
 APP_NAME = "CodeUA"
+BASE_URL = ""
 
 TITLE_SIZE = 24
 TEXT_SIZE = 20
@@ -19,8 +20,6 @@ DEFAULT_ALARM_TIME = {
 }
 
 playlist = {
-    "anthem": "/sounds/anthem_of_Ukraine.ogx",
     "moment": "/sounds/moment_of_silence.mp3",
+    "anthem": "/sounds/anthem_of_Ukraine.ogx",
 }
-
-BASE_URL = ""
