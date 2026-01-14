@@ -31,10 +31,10 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         await audio.resume()
 
     def _set_volume(value: float):
-        nonlocal volume_level
+
         audio.volume = utils.clamp_value(audio.volume + value, 0, 1)
         volume_level = int(audio.volume * 100)
-        switcher.label = f"Гучність: {volume_level}%"
+        switcher.label = f"Рівень гучності: {volume_level}%"
         switcher.update()
 
     async def _switch():
@@ -50,14 +50,10 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
             timer.update()
             await asyncio.sleep(1)
 
-    track_name = page.session.store.get("track_name")
-
-    volume_level = int(audio.volume * 100)
-
     switcher = ft.Dropdown(
-        label=f"Гучність: {volume_level}%",
+        label=f"Рівень гучності: {int(audio.volume * 100)}%",
         label_style=ft.TextStyle(size=TEXT_SIZE),
-        value=track_name,
+        value=page.session.store.get("track_name"),
         options=[
             ft.DropdownOption(key=Track.MOMENT.value, text="Хвилина мовчання"),
             ft.DropdownOption(key=Track.ANTHEM.value, text="Гімн України"),
