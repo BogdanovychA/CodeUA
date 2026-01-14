@@ -10,8 +10,6 @@ from utils import elements, storage, utils
 from utils.config import DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE, playlist
 from utils.models import Track
 
-global_task_is_running = False
-
 
 def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
@@ -151,8 +149,7 @@ async def main(page: ft.Page):
 
     async def _check_time():
 
-        global global_task_is_running
-        global_task_is_running = True
+        page.session.store.set("global_task_is_running", True)
 
         while True:
 
@@ -177,6 +174,7 @@ async def main(page: ft.Page):
         page.session.store.set("track_name", DEFAULT_TRACK)
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("update_timer_task", None)
+        page.session.store.set("global_task_is_running", False)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
@@ -194,6 +192,8 @@ async def main(page: ft.Page):
         # on_state_change=lambda e: print("State changed:", e.state),
         # on_seek_complete=lambda _: print("Seek complete"),
     )
+
+    global_task_is_running = page.session.store.get("global_task_is_running")
 
     if not global_task_is_running:
         page.run_task(_check_time)
