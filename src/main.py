@@ -190,7 +190,7 @@ async def main(page: ft.Page):
 
         alarm_time = await storage.load_dict("alarm_time")
         if not alarm_time:
-            await storage.save_dict("alarm_time", DEFAULT_ALARM_TIME)
+            await storage.save_dict("alarm_time", DEFAULT_ALARM_TIME.copy())
             alarm_time = await storage.load_dict("alarm_time")
 
         page.session.store.set("alarm_time", alarm_time)
