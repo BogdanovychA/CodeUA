@@ -7,7 +7,7 @@ import flet_audio as fta
 
 from routes import about, error404, root, settings
 from utils import elements, storage, utils
-from utils.config import DEFAULT_ALARM_TIME, TEXT_SIZE, playlist
+from utils.config import DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE, playlist
 from utils.models import Track
 
 
@@ -48,13 +48,17 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     async def _switch():
         await _pause()
+        page.session.store.set("track_name", switcher.value)
         audio.src = playlist[switcher.value]
+
         # event.page.update()
+
+    track_name = page.session.store.get("track_name")
 
     switcher = ft.Dropdown(
         label="Композиція",
         label_style=ft.TextStyle(size=TEXT_SIZE),
-        value=Track.MOMENT.value,
+        value=track_name,
         options=[
             ft.DropdownOption(key=Track.MOMENT.value, text="Хвилина мовчання"),
             ft.DropdownOption(key=Track.ANTHEM.value, text="Гімн України"),
@@ -160,12 +164,12 @@ async def main(page: ft.Page):
     async def _init() -> None:
 
         alarm_time = await storage.load_dict("alarm_time")
-
         if not alarm_time:
             await storage.save_dict("alarm_time", DEFAULT_ALARM_TIME)
             alarm_time = await storage.load_dict("alarm_time")
 
         page.session.store.set("alarm_time", alarm_time)
+        page.session.store.set("track_name", DEFAULT_TRACK)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
