@@ -45,7 +45,6 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
     async def _update_timer():
 
         while True:
-
             timer.value = page.session.store.get("time_left")
             timer.update()
             await asyncio.sleep(1)
@@ -87,7 +86,8 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     page.title = root.TITLE
 
-    page.update_timer_task = page.run_task(_update_timer)
+    update_timer_task = page.run_task(_update_timer)
+    page.session.store.set("update_timer_task", update_timer_task)
 
     return ft.View(
         route=root.ROUTE,
@@ -124,10 +124,11 @@ async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     page.route = root.ROUTE
 
-    def route_change():
+    async def route_change():
 
-        if page.update_timer_task:
-            page.update_timer_task.cancel()
+        update_timer_task = page.session.store.get("update_timer_task")
+        if update_timer_task:
+            update_timer_task.cancel()
 
         page.views.clear()
         page.views.append(build_main_view(page, audio))
@@ -175,6 +176,7 @@ async def main(page: ft.Page):
         page.session.store.set("alarm_time", alarm_time)
         page.session.store.set("track_name", DEFAULT_TRACK)
         page.session.store.set("time_left", "23:59:59")
+        page.session.store.set("update_timer_task", None)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
@@ -193,13 +195,10 @@ async def main(page: ft.Page):
         # on_seek_complete=lambda _: print("Seek complete"),
     )
 
-    page.update_timer_task = None
-    page.time_left = None
-
     if not global_task_is_running:
         page.run_task(_check_time)
 
-    route_change()
+    await route_change()
 
 
 if __name__ == "__main__":
