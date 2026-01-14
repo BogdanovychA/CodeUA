@@ -71,18 +71,20 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
     pause_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_pause)
     resume_button = ft.IconButton(ft.Icons.PLAY_CIRCLE_OUTLINED, on_click=_resume)
-    volume_plus_button = ft.IconButton(
+
+    volume_minus_button = ft.IconButton(
         ft.Icons.VOLUME_DOWN_ROUNDED, on_click=lambda _: _set_volume(-0.1)
     )
-    volume_minus_button = ft.IconButton(
+
+    volume_plus_button = ft.IconButton(
         ft.Icons.VOLUME_UP_ROUNDED, on_click=lambda _: _set_volume(0.1)
     )
 
     player_control = [
-        volume_plus_button,
+        volume_minus_button,
         play_button,
         resume_button,
-        volume_minus_button,
+        volume_plus_button,
     ]
 
     controller = ft.Row(
