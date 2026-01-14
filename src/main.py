@@ -44,7 +44,11 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         await audio.resume()
 
     def _set_volume(value: float):
-        audio.volume += value
+        nonlocal volume_level
+        audio.volume = utils.clamp_value(audio.volume + value, 0, 1)
+        volume_level = int(audio.volume * 100)
+        switcher.label = f"Гучність: {volume_level}%"
+        switcher.update()
 
     async def _switch():
         await _pause()
@@ -55,8 +59,10 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     track_name = page.session.store.get("track_name")
 
+    volume_level = int(audio.volume * 100)
+
     switcher = ft.Dropdown(
-        label="Композиція",
+        label=f"Гучність: {volume_level}%",
         label_style=ft.TextStyle(size=TEXT_SIZE),
         value=track_name,
         options=[
@@ -91,18 +97,6 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         controls=player_control,
         alignment=ft.MainAxisAlignment.CENTER,
     )
-
-    # audio = fta.Audio(
-    #     src=playlist[switcher.value],
-    #     autoplay=False,
-    #     volume=1,
-    #     balance=0,
-    #     # on_loaded=lambda _: print("Loaded"),
-    #     # on_duration_change=lambda e: print("Duration changed:", e.duration),
-    #     # on_position_change=lambda e: print("Position changed:", e.position),
-    #     # on_state_change=lambda e: print("State changed:", e.state),
-    #     # on_seek_complete=lambda _: print("Seek complete"),
-    # )
 
     page.title = root.TITLE
 
@@ -181,7 +175,7 @@ async def main(page: ft.Page):
     audio = fta.Audio(
         src=playlist[Track.MOMENT.value],
         autoplay=False,
-        volume=1,
+        volume=0.5,
         balance=0,
         # on_loaded=lambda _: print("Loaded"),
         # on_duration_change=lambda e: print("Duration changed:", e.duration),

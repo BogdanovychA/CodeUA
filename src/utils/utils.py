@@ -21,9 +21,14 @@ def check_delta(hours, minutes, seconds) -> tuple[int, int, int]:
     return h, m, s
 
 
-def is_int(value) -> bool:
-    try:
-        int(value)
-        return True
-    except ValueError:
-        return False
+def clamp_value(
+    value: int | float, min_value: int | float | None, max_value: int | float | None
+) -> int | float:
+    """Обмеження значення між min та max.
+    Якщо щось обмежувати не треба -- передаємо None"""
+
+    if min_value is not None:
+        value = max(value, min_value)
+    if max_value is not None:
+        value = min(value, max_value)
+    return value
