@@ -14,25 +14,21 @@ from utils.models import Track
 def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     async def _play():
-        player_control[2] = pause_button
-        controller.update()
+        page.session.store.set("track_is_playing", True)
         await audio.play()
 
     async def _pause():
-        player_control[2] = resume_button
-        controller.update()
+        page.session.store.set("track_is_playing", False)
         await audio.pause()
 
     async def _resume():
-        player_control[2] = pause_button
-        controller.update()
+        page.session.store.set("track_is_playing", True)
         await audio.resume()
 
     def _set_volume(value: float):
 
         audio.volume = utils.clamp_value(audio.volume + value, 0, 1)
-        volume_level = int(audio.volume * 100)
-        switcher.label = f"Рівень гучності: {volume_level}%"
+        switcher.label = f"Рівень гучності: {int(audio.volume * 100)}%"
         switcher.update()
 
     async def _switch():
@@ -40,12 +36,43 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         page.session.store.set("track_name", switcher.value)
         audio.src = playlist[switcher.value]
 
-    async def _update_timer():
+    async def _ui_update():
 
         while True:
-            timer.value = page.session.store.get("time_left")
-            timer.update()
-            await asyncio.sleep(1)
+            if timer.value != page.session.store.get("time_left"):
+                timer.value = page.session.store.get("time_left")
+                timer.update()
+
+            if page.session.store.get("track_is_playing"):
+                if player_control[2] != pause_button:
+                    player_control[2] = pause_button
+                    controller.update()
+            else:
+                if player_control[2] != resume_button:
+                    player_control[2] = resume_button
+                    controller.update()
+
+            duration1 = await audio.get_current_position()
+
+            await asyncio.sleep(0.1)
+
+            duration2 = await audio.get_current_position()
+
+            if duration1 and duration2:
+                if (
+                    duration1.microseconds != duration2.microseconds
+                    or duration1.milliseconds != duration2.milliseconds
+                    or duration1.seconds != duration2.seconds
+                    or duration1.minutes != duration2.minutes
+                ):
+                    page.session.store.set("track_is_playing", True)
+                    # print("playing")
+                else:
+                    page.session.store.set("track_is_playing", False)
+                    # print("stopped")
+            else:
+                page.session.store.set("track_is_playing", False)
+                # print("stopped")
 
     switcher = ft.Dropdown(
         label=f"Рівень гучності: {int(audio.volume * 100)}%",
@@ -84,8 +111,8 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     page.title = root.TITLE
 
-    update_timer_task = page.run_task(_update_timer)
-    page.session.store.set("update_timer_task", update_timer_task)
+    _ui_update_task = page.run_task(_ui_update)
+    page.session.store.set("_ui_update_task", _ui_update_task)
 
     return ft.View(
         route=root.ROUTE,
@@ -100,7 +127,8 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
             ),
             ft.Text(""),
             ft.Text(
-                "До вшанування пам'яті\nзагиблих героїв залишилося:", size=TEXT_SIZE
+                "До вшанування пам'яті загиблих\nГероїв України залишилося:",
+                size=TEXT_SIZE,
             ),
             timer,
             ft.Text(""),
@@ -124,9 +152,9 @@ async def main(page: ft.Page):
 
     async def route_change():
 
-        update_timer_task = page.session.store.get("update_timer_task")
-        if update_timer_task:
-            update_timer_task.cancel()
+        _ui_update_task = page.session.store.get("_ui_update_task")
+        if _ui_update_task:
+            _ui_update_task.cancel()
 
         page.views.clear()
         page.views.append(build_main_view(page, audio))
@@ -173,8 +201,9 @@ async def main(page: ft.Page):
         page.session.store.set("alarm_time", alarm_time)
         page.session.store.set("track_name", DEFAULT_TRACK)
         page.session.store.set("time_left", "23:59:59")
-        page.session.store.set("update_timer_task", None)
+        page.session.store.set("_ui_update_task", None)
         page.session.store.set("global_task_is_running", False)
+        page.session.store.set("track_is_playing", False)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
