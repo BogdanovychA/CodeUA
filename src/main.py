@@ -10,23 +10,10 @@ from utils import elements, storage, utils
 from utils.config import DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE, playlist
 from utils.models import Track
 
+global_task_is_running = False
+
 
 def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
-
-    async def _check_time():
-
-        while True:
-
-            alarm_time = page.session.store.get("alarm_time")
-            hours, minutes, seconds = utils.check_delta(**alarm_time)
-
-            if hours == minutes == seconds == 0:
-                await _play()
-
-            time_left = f"{hours:02}:{minutes:02}:{seconds:02}"
-            timer.value = time_left
-            timer.update()
-            await asyncio.sleep(1)
 
     async def _play():
         player_control[2] = pause_button
@@ -55,7 +42,13 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         page.session.store.set("track_name", switcher.value)
         audio.src = playlist[switcher.value]
 
-        # event.page.update()
+    async def _update_timer():
+
+        while True:
+
+            timer.value = page.session.store.get("time_left")
+            timer.update()
+            await asyncio.sleep(1)
 
     track_name = page.session.store.get("track_name")
 
@@ -77,11 +70,9 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
     pause_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_pause)
     resume_button = ft.IconButton(ft.Icons.PLAY_CIRCLE_OUTLINED, on_click=_resume)
-
     volume_minus_button = ft.IconButton(
         ft.Icons.VOLUME_DOWN_ROUNDED, on_click=lambda _: _set_volume(-0.1)
     )
-
     volume_plus_button = ft.IconButton(
         ft.Icons.VOLUME_UP_ROUNDED, on_click=lambda _: _set_volume(0.1)
     )
@@ -100,7 +91,7 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     page.title = root.TITLE
 
-    page.run_task(_check_time)
+    page.update_timer_task = page.run_task(_update_timer)
 
     return ft.View(
         route=root.ROUTE,
@@ -138,6 +129,10 @@ async def main(page: ft.Page):
     page.route = root.ROUTE
 
     def route_change():
+
+        if page.update_timer_task:
+            page.update_timer_task.cancel()
+
         page.views.clear()
         page.views.append(build_main_view(page, audio))
         match page.route:
@@ -157,6 +152,23 @@ async def main(page: ft.Page):
             top_view = page.views[-1]
             await page.push_route(top_view.route)
 
+    async def _check_time():
+
+        global global_task_is_running
+        global_task_is_running = True
+
+        while True:
+
+            alarm_time = page.session.store.get("alarm_time")
+            hours, minutes, seconds = utils.check_delta(**alarm_time)
+
+            if hours == minutes == seconds == 0:
+                await audio.play()
+
+            page.session.store.set("time_left", f"{hours:02}:{minutes:02}:{seconds:02}")
+
+            await asyncio.sleep(1)
+
     async def _init() -> None:
 
         alarm_time = await storage.load_dict("alarm_time")
@@ -166,6 +178,7 @@ async def main(page: ft.Page):
 
         page.session.store.set("alarm_time", alarm_time)
         page.session.store.set("track_name", DEFAULT_TRACK)
+        page.session.store.set("time_left", "23:59:59")
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
@@ -184,9 +197,14 @@ async def main(page: ft.Page):
         # on_seek_complete=lambda _: print("Seek complete"),
     )
 
+    page.update_timer_task = None
+    page.time_left = None
+
+    if not global_task_is_running:
+        page.run_task(_check_time)
+
     route_change()
 
 
 if __name__ == "__main__":
-
     ft.run(main, assets_dir="assets")
