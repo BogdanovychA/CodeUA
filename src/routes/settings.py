@@ -59,22 +59,28 @@ def build_view(page: ft.Page) -> ft.View:
         route=ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(TITLE),
+            elements.app_bar(TITLE, page),
             ft.Text(""),
             ft.Text(TITLE, size=TEXT_SIZE),
             ft.Text(""),
             ft.Text("Час запуску:", size=TEXT_SIZE),
             alarm_block,
-            ft.Button(
-                content="Встановити",
-                on_click=lambda: page.show_dialog(time_picker),
-            ),
-            ft.Button(
-                content="Скинути",
-                on_click=_reset,
+            ft.Row(
+                controls=[
+                    ft.Button(
+                        content="Встановити",
+                        on_click=lambda: page.show_dialog(time_picker),
+                    ),
+                    ft.IconButton(
+                        ft.Icons.UPDATE,
+                        on_click=_reset,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
             ),
             ft.Button(
                 content="Видалити кеш",
+                icon=ft.Icons.DELETE_SWEEP,
                 on_click=_clear_cache,
             ),
             ft.Text(""),

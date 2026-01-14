@@ -118,7 +118,7 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         route=root.ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(root.TITLE),
+            elements.app_bar(root.TITLE, page),
             ft.Text(""),
             ft.Image(
                 src="/icon.png",
@@ -134,11 +134,6 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
             ft.Text(""),
             switcher,
             controller,
-            ft.Text(""),
-            ft.Button(
-                settings.TITLE,
-                on_click=lambda: asyncio.create_task(page.push_route(settings.ROUTE)),
-            ),
             ft.Text(""),
             about.button(page),
         ],
