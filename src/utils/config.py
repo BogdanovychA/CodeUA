@@ -2,6 +2,8 @@
 
 import flet as ft
 
+from utils.models import Track
+
 APP_NAME = "CodeUA"
 BASE_URL = ""
 
@@ -20,6 +22,6 @@ DEFAULT_ALARM_TIME = {
 }
 
 playlist = {
-    "moment": "/sounds/moment_of_silence.mp3",
-    "anthem": "/sounds/anthem_of_Ukraine.ogx",
+    Track.MOMENT.value: "/sounds/moment_of_silence.mp3",
+    Track.ANTHEM.value: "/sounds/anthem_of_Ukraine.ogx",
 }

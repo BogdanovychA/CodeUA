@@ -8,6 +8,7 @@ import flet_audio as fta
 from routes import about, error404, root, settings
 from utils import elements, storage, utils
 from utils.config import DEFAULT_ALARM_TIME, TEXT_SIZE, playlist
+from utils.models import Track
 
 
 def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
@@ -53,10 +54,10 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
     switcher = ft.Dropdown(
         label="Композиція",
         label_style=ft.TextStyle(size=TEXT_SIZE),
-        value="moment",
+        value=Track.MOMENT.value,
         options=[
-            ft.DropdownOption(key="moment", text="Хвилина мовчання"),
-            ft.DropdownOption(key="anthem", text="Гімн України"),
+            ft.DropdownOption(key=Track.MOMENT.value, text="Хвилина мовчання"),
+            ft.DropdownOption(key=Track.ANTHEM.value, text="Гімн України"),
         ],
         on_select=_switch,
     )
@@ -172,7 +173,7 @@ async def main(page: ft.Page):
     await _init()
 
     audio = fta.Audio(
-        src=playlist["moment"],
+        src=playlist[Track.MOMENT.value],
         autoplay=False,
         volume=1,
         balance=0,
