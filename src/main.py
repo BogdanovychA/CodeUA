@@ -39,9 +39,10 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
     # async def _resume():
     #     await audio[0].resume()
 
-    def _set_volume(value: float):
+    async def _set_volume(value: float):
 
         audio[0].volume = utils.clamp_value(audio[0].volume + value, 0, 1)
+        await storage.save("volume", audio[0].volume)
         switcher.label = f"Рівень гучності: {int(audio[0].volume * 100)}%"
         switcher.update()
 
@@ -114,10 +115,12 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
     stop_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_stop)
     # resume_button = ft.IconButton(ft.Icons.PLAY_CIRCLE_OUTLINED, on_click=_resume)
     volume_minus_button = ft.IconButton(
-        ft.Icons.VOLUME_DOWN_ROUNDED, on_click=lambda _: _set_volume(-0.1)
+        ft.Icons.VOLUME_DOWN_ROUNDED,
+        on_click=lambda _: asyncio.create_task(_set_volume(-0.1)),
     )
     volume_plus_button = ft.IconButton(
-        ft.Icons.VOLUME_UP_ROUNDED, on_click=lambda _: _set_volume(0.1)
+        ft.Icons.VOLUME_UP_ROUNDED,
+        on_click=lambda _: asyncio.create_task(_set_volume(0.1)),
     )
 
     player_control = [
@@ -178,7 +181,7 @@ async def main(page: ft.Page):
         page.views.append(build_main_view(page, audio))
         match page.route:
             case settings.ROUTE:
-                page.views.append(settings.build_view(page))
+                page.views.append(settings.build_view(page, audio))
             case about.ROUTE:
                 page.views.append(about.build_view(page))
             case _:
@@ -234,7 +237,7 @@ async def main(page: ft.Page):
         return fta.Audio(
             src=playlist[page.session.store.get("track_name")],
             autoplay=False,
-            volume=0.5,
+            volume=page.session.store.get("volume"),
             balance=0,
             # on_state_change=lambda e: asyncio.create_task(_state_change(e)),
             on_state_change=lambda e: _state_change(e),
@@ -262,6 +265,7 @@ async def main(page: ft.Page):
         await __init_obj("alarm_time", DEFAULT_ALARM_TIME.copy())
         await __init_obj("track_name", DEFAULT_TRACK)
         await __init_obj("alarm_on", True)
+        await __init_obj("volume", 0.5)
 
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)

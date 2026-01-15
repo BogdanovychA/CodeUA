@@ -12,7 +12,7 @@ TITLE = "Налаштування"
 ROUTE = BASE_URL + "/settings"
 
 
-def build_view(page: ft.Page) -> ft.View:
+def build_view(page: ft.Page, audio) -> ft.View:
 
     async def _clear_cache() -> None:
         await storage.clear()
@@ -39,6 +39,9 @@ def build_view(page: ft.Page) -> ft.View:
 
         await storage.save("track_name", DEFAULT_TRACK)
         page.session.store.set("track_name", DEFAULT_TRACK)
+
+        audio[0].volume = 0.5
+        await storage.save("volume", 0.5)
 
         alarm_block.style.color = ft.Colors.PRIMARY
         alarm_block.update()
