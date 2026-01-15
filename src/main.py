@@ -42,6 +42,7 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
     async def _switch():
         await _pause()
         page.session.store.set("track_name", switcher.value)
+        await storage.save("track_name", switcher.value)
         audio[0].src = playlist[switcher.value]
 
     async def _ui_update():
@@ -240,17 +241,27 @@ async def main(page: ft.Page):
     async def _init() -> None:
 
         alarm_time = await storage.load("alarm_time")
-        if not alarm_time:
+        if alarm_time is None:
             await storage.save("alarm_time", DEFAULT_ALARM_TIME.copy())
             alarm_time = await storage.load("alarm_time")
-
         page.session.store.set("alarm_time", alarm_time)
-        page.session.store.set("track_name", DEFAULT_TRACK)
+
+        track_name = await storage.load("track_name")
+        if track_name is None:
+            await storage.save("track_name", DEFAULT_TRACK)
+            track_name = await storage.load("track_name")
+        page.session.store.set("track_name", track_name)
+
+        alarm_on = await storage.load("alarm_on")
+        if alarm_on is None:
+            await storage.save("alarm_on", True)
+            alarm_on = await storage.load("alarm_on")
+        page.session.store.set("alarm_on", alarm_on)
+
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)
         page.session.store.set("global_task_is_running", False)
         page.session.store.set("audio_state", None)
-        page.session.store.set("alarm_on", True)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop

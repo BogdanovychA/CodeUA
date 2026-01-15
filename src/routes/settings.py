@@ -5,7 +5,7 @@ from datetime import time
 import flet as ft
 
 from utils import elements, storage
-from utils.config import BASE_URL, DEFAULT_ALARM_TIME, TEXT_SIZE
+from utils.config import BASE_URL, DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE
 from utils.models import Bool
 
 TITLE = "Налаштування"
@@ -33,8 +33,12 @@ def build_view(page: ft.Page) -> ft.View:
         await _set_alarm(new_alarm_time)
 
         page.session.store.set("alarm_on", True)
+        await storage.save("alarm_on", True)
         alarm_on_selector.selected[0] = Bool.TRUE.value
         alarm_on_selector.update()
+
+        await storage.save("track_name", DEFAULT_TRACK)
+        page.session.store.set("track_name", DEFAULT_TRACK)
 
         alarm_block.style.color = ft.Colors.PRIMARY
         alarm_block.update()
@@ -49,13 +53,15 @@ def build_view(page: ft.Page) -> ft.View:
 
         await _set_alarm(new_alarm_time)
 
-    def _switch(event: ft.Event) -> None:
+    async def _switch(event: ft.Event) -> None:
 
         if event.control.selected[0] == Bool.TRUE.value:
             page.session.store.set("alarm_on", True)
+            await storage.save("alarm_on", True)
             alarm_block.style.color = ft.Colors.PRIMARY
         else:
             page.session.store.set("alarm_on", False)
+            await storage.save("alarm_on", False)
             alarm_block.style.color = ft.Colors.ON_PRIMARY
 
         alarm_block.update()
