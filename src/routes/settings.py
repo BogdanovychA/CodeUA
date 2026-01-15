@@ -47,17 +47,13 @@ def build_view(page: ft.Page) -> ft.View:
         if event.control.selected[0] == Bool.TRUE.value:
             page.session.store.set("alarm_on", True)
 
-            alarm_block.style = ft.TextStyle(
-                color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD
-            )
+            alarm_block.style.color = ft.Colors.PRIMARY
             alarm_block.update()
 
         else:
             page.session.store.set("alarm_on", False)
 
-            alarm_block.style = ft.TextStyle(
-                color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
-            )
+            alarm_block.style.color = ft.Colors.ON_PRIMARY
             alarm_block.update()
 
     alarm_time = page.session.store.get("alarm_time")
@@ -65,7 +61,14 @@ def build_view(page: ft.Page) -> ft.View:
 
     alarm_block = ft.Text(
         f"{hours:02}:{minutes:02}",
-        style=ft.TextStyle(color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD),
+        style=ft.TextStyle(
+            color=(
+                ft.Colors.PRIMARY
+                if page.session.store.get("alarm_on")
+                else ft.Colors.ON_PRIMARY
+            ),
+            weight=ft.FontWeight.BOLD,
+        ),
         size=TEXT_SIZE,
     )
 

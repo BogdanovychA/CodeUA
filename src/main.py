@@ -53,20 +53,12 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
                 timer.update()
 
             if page.session.store.get("alarm_on"):
-                if timer.style != ft.TextStyle(
-                    color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD
-                ):
-                    timer.style = ft.TextStyle(
-                        color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD
-                    )
+                if timer.style.color != ft.Colors.PRIMARY:
+                    timer.style.color = ft.Colors.PRIMARY
                     timer.update()
             else:
-                if timer.style != ft.TextStyle(
-                    color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
-                ):
-                    timer.style = ft.TextStyle(
-                        color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
-                    )
+                if timer.style.color != ft.Colors.ON_PRIMARY:
+                    timer.style.color = ft.Colors.ON_PRIMARY
                     timer.update()
 
             audio_state = page.session.store.get("audio_state")
@@ -97,14 +89,18 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         on_select=_switch,
     )
 
-    if page.session.store.get("alarm_on"):
-        timer_style = ft.TextStyle(color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD)
-    else:
-        timer_style = ft.TextStyle(
-            color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
-        )
-
-    timer = ft.Text("", size=TEXT_SIZE, style=timer_style)
+    timer = ft.Text(
+        "",
+        size=TEXT_SIZE,
+        style=ft.TextStyle(
+            color=(
+                ft.Colors.PRIMARY
+                if page.session.store.get("alarm_on")
+                else ft.Colors.ON_PRIMARY
+            ),
+            weight=ft.FontWeight.BOLD,
+        ),
+    )
 
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
     pause_button = ft.IconButton(ft.Icons.PAUSE_ROUNDED, on_click=_pause)
