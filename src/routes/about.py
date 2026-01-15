@@ -42,6 +42,19 @@ def build_view(page: ft.Page) -> ft.View:
                 ],
             ),
             ft.Text(""),
+            ft.Text(
+                "Створено за підтримки\nГО «Фундація.101»",
+                size=TEXT_SIZE,
+            ),
+            ft.Text(
+                size=TEXT_SIZE,
+                spans=[
+                    elements.link(
+                        "Підтримати проєкт", "https://send.monobank.ua/jar/8Qn1woNnC7"
+                    ),
+                ],
+            ),
+            ft.Text(""),
             elements.back_button(page),
         ],
     )
