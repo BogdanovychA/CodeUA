@@ -1,15 +1,15 @@
 [project]
 name = "CodeUA"
-version = "0.1.0"
+version = "1.0.0"
 description = "CodeUA for Ukrainian people"
 readme = "README.md"
 requires-python = "==3.13"
 authors = [
-    { name = "Andrii Bogdanovych", email = "a@bogdanovych.org" }
+    { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
 dependencies = [
-  "flet>=0.80.1",
-  "flet-audio>=0.80.1"
+  "flet>=0.80.2",
+  "flet-audio>=0.80.2"
 ]
 
 [dependency-groups]
@@ -19,10 +19,10 @@ dev = [
 ]
 
 [tool.flet]
-org = "org.bogdanovych"
+org = "org.foundation101"
 product = "CodeUA"
-company = "Bogdanovych Corp."
-copyright = "Copyright (C) 2025 by Andrii Bogdanovych"
+company = "Founation.101"
+copyright = "Copyright (C) 2026 by Foundation.101"
 
 [tool.flet.app]
 path = "src"
