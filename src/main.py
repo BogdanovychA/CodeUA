@@ -189,6 +189,7 @@ async def main(page: ft.Page):
 
         match event.state:
             case fta.AudioState.COMPLETED:
+                # Якщо трек відіграв, перестворюємо об'єкт
                 audio[0] = _create_audio()
             case fta.AudioState.PLAYING:
                 pass
@@ -197,7 +198,8 @@ async def main(page: ft.Page):
             case fta.AudioState.PAUSED:
                 pass
             case fta.AudioState.DISPOSED:
-                pass
+                # Перестворюємо об'єкт (для перестраховки :))
+                audio[0] = _create_audio()
             case None:
                 pass
 
@@ -234,6 +236,8 @@ async def main(page: ft.Page):
 
     await _init()
 
+    # Об'єкт вкладаємо в єдиний елемент списку, щоб мати можливість
+    # його перестворювати, не змінюючи посилання
     audio = [_create_audio()]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
