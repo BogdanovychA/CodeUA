@@ -45,32 +45,29 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         audio[0].src = playlist[switcher.value]
 
     async def _ui_update():
-        try:
-            while True:
-                time_left = page.session.store.get("time_left")
-                if timer.value != time_left:
-                    timer.value = time_left
-                    timer.update()
 
-                audio_state = page.session.store.get("audio_state")
-                match audio_state:
-                    case fta.AudioState.PLAYING:
-                        if player_control[1] != pause_button:
-                            player_control[1] = pause_button
-                            controller.update()
+        while True:
+            time_left = page.session.store.get("time_left")
+            if timer.value != time_left:
+                timer.value = time_left
+                timer.update()
 
-                    case fta.AudioState.DISPOSED:  # audio player has been disposed
-                        pass
+            audio_state = page.session.store.get("audio_state")
+            match audio_state:
+                case fta.AudioState.PLAYING:
+                    if player_control[1] != pause_button:
+                        player_control[1] = pause_button
+                        controller.update()
 
-                    case _:
-                        if player_control[1] != play_button:
-                            player_control[1] = play_button
-                            controller.update()
+                case fta.AudioState.DISPOSED:  # audio player has been disposed
+                    pass
 
-                await asyncio.sleep(0.5)
+                case _:
+                    if player_control[1] != play_button:
+                        player_control[1] = play_button
+                        controller.update()
 
-        except asyncio.CancelledError as e:
-            print(f"CancelledError: {e}")
+            await asyncio.sleep(0.5)
 
     switcher = ft.Dropdown(
         label=f"Рівень гучності: {int(audio[0].volume * 100)}%",
@@ -185,22 +182,20 @@ async def main(page: ft.Page):
 
             await asyncio.sleep(1)
 
-    async def _state_change(event: fta.AudioStateChangeEvent | None):
+    def _state_change(event: fta.AudioStateChangeEvent | None):
 
         page.session.store.set("audio_state", event.state)
-        print(page.session.store.get("audio_state"))
-
-        nonlocal audio
+        # print(page.session.store.get("audio_state"))
 
         match event.state:
+            case fta.AudioState.COMPLETED:
+                audio[0] = _create_audio()
             case fta.AudioState.PLAYING:
                 pass
             case fta.AudioState.STOPPED:
                 pass
             case fta.AudioState.PAUSED:
                 pass
-            case fta.AudioState.COMPLETED:
-                audio[0] = _create_audio()
             case fta.AudioState.DISPOSED:
                 pass
             case None:
@@ -212,11 +207,11 @@ async def main(page: ft.Page):
             autoplay=False,
             volume=0.5,
             balance=0,
-            on_loaded=lambda _: print("Loaded"),
+            # on_state_change=lambda e: asyncio.create_task(_state_change(e)),
+            on_state_change=lambda e: _state_change(e),
+            # on_loaded=lambda _: print("Loaded"),
             # on_duration_change=lambda e: print("Duration changed:", e.duration),
             # on_position_change=lambda e: print("Position changed:", e.position),
-            # on_state_change=lambda e: _state_change(e),
-            on_state_change=lambda e: asyncio.create_task(_state_change(e)),
             # on_seek_complete=lambda _: print("Seek complete"),
         )
 
