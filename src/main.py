@@ -239,10 +239,10 @@ async def main(page: ft.Page):
 
     async def _init() -> None:
 
-        alarm_time = await storage.load_dict("alarm_time")
+        alarm_time = await storage.load("alarm_time")
         if not alarm_time:
-            await storage.save_dict("alarm_time", DEFAULT_ALARM_TIME.copy())
-            alarm_time = await storage.load_dict("alarm_time")
+            await storage.save("alarm_time", DEFAULT_ALARM_TIME.copy())
+            alarm_time = await storage.load("alarm_time")
 
         page.session.store.set("alarm_time", alarm_time)
         page.session.store.set("track_name", DEFAULT_TRACK)

@@ -21,7 +21,7 @@ def build_view(page: ft.Page) -> ft.View:
     async def _set_alarm(new_alarm_time: dict) -> None:
 
         page.session.store.set("alarm_time", new_alarm_time)
-        await storage.save_dict("alarm_time", new_alarm_time)
+        await storage.save("alarm_time", new_alarm_time)
 
         alarm_block.value = (
             f"{new_alarm_time["hours"]:02}:{new_alarm_time["minutes"]:02}"

@@ -7,33 +7,37 @@ import flet as ft
 from utils.config import APP_NAME
 
 
-async def save_dict(name: str, the_dict: dict) -> None:
-    name_dict = f"{APP_NAME}.{name}"
-    dict_json = json.dumps(the_dict)
+async def save(name: str, obj: object) -> None:
 
-    await ft.SharedPreferences().set(name_dict, dict_json)
+    name_obj = f"{APP_NAME}.{name}"
+    obj_json = json.dumps(obj)
+
+    await ft.SharedPreferences().set(name_obj, obj_json)
 
 
-async def load_dict(name: str) -> dict:
+async def load(name: str) -> object:
 
-    name_dict = f"{APP_NAME}.{name}"
+    name_obj = f"{APP_NAME}.{name}"
 
-    is_contains = await ft.SharedPreferences().contains_key(name_dict)
+    is_contains = await ft.SharedPreferences().contains_key(name_obj)
 
     if is_contains:
-        dict_json = await ft.SharedPreferences().get(name_dict)
-        the_dict = json.loads(dict_json)
-        return the_dict
+        obj_json = await ft.SharedPreferences().get(name_obj)
+        obj = json.loads(obj_json)
+        return obj
     else:
-        return {}
+        return None
 
 
 async def clear() -> None:
 
-    # keys = await ft.SharedPreferences().get_keys("")
-    # print(keys)
+    # await list_keys()
 
     await ft.SharedPreferences().clear()
 
-    # keys = await ft.SharedPreferences().get_keys("")
-    # print(keys)
+    # await list_keys()
+
+
+async def list_keys() -> None:
+    keys = await ft.SharedPreferences().get_keys("")
+    print(keys)
