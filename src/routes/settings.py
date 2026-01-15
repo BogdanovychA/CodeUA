@@ -32,6 +32,13 @@ def build_view(page: ft.Page) -> ft.View:
         new_alarm_time = DEFAULT_ALARM_TIME.copy()
         await _set_alarm(new_alarm_time)
 
+        page.session.store.set("alarm_on", True)
+        alarm_on_selector.selected[0] = Bool.TRUE.value
+        alarm_on_selector.update()
+
+        alarm_block.style.color = ft.Colors.PRIMARY
+        alarm_block.update()
+
     async def _change() -> None:
 
         new_alarm_time = {
