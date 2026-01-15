@@ -39,6 +39,8 @@ def build_view(page: ft.Page, audio) -> ft.View:
 
         await storage.save("track_name", DEFAULT_TRACK)
         page.session.store.set("track_name", DEFAULT_TRACK)
+        await audio[0].pause()
+        await audio[0].seek(ft.Duration(seconds=0))
 
         audio[0].volume = 0.5
         await storage.save("volume", 0.5)
