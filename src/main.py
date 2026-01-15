@@ -14,16 +14,24 @@ from utils.models import Track
 def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
 
     async def _play():
-        page.session.store.set("track_is_playing", True)
-        await audio.play()
+        audio_state = page.session.store.get("audio_state")
+        match audio_state:
+            case fta.AudioState.PAUSED:
+                await audio.resume()
+            case fta.AudioState.DISPOSED:  # audio player has been disposed
+                pass
+            case _:
+                await audio.play()
+
+    async def _stop():
+        await audio.pause()
+        await audio.seek(ft.Duration(seconds=0))
 
     async def _pause():
-        page.session.store.set("track_is_playing", False)
         await audio.pause()
 
-    async def _resume():
-        page.session.store.set("track_is_playing", True)
-        await audio.resume()
+    # async def _resume():
+    #     await audio.resume()
 
     def _set_volume(value: float):
 
@@ -44,36 +52,23 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
                     timer.value = time_left
                     timer.update()
 
-                if page.session.store.get("track_is_playing"):
-                    if player_control[2] != pause_button:
-                        player_control[2] = pause_button
-                        controller.update()
-                else:
-                    if player_control[2] != resume_button:
-                        player_control[2] = resume_button
-                        controller.update()
+                audio_state = page.session.store.get("audio_state")
+                match audio_state:
+                    case fta.AudioState.PLAYING:
+                        if player_control[1] != pause_button:
+                            player_control[1] = pause_button
+                            controller.update()
 
-                duration1 = await audio.get_current_position()
+                    case fta.AudioState.DISPOSED:  # audio player has been disposed
+                        pass
+
+                    case _:
+                        if player_control[1] != play_button:
+                            player_control[1] = play_button
+                            controller.update()
 
                 await asyncio.sleep(0.5)
 
-                duration2 = await audio.get_current_position()
-
-                if duration1 and duration2:
-                    if (
-                        duration1.microseconds != duration2.microseconds
-                        or duration1.milliseconds != duration2.milliseconds
-                        or duration1.seconds != duration2.seconds
-                        or duration1.minutes != duration2.minutes
-                    ):
-                        page.session.store.set("track_is_playing", True)
-                        # print("playing")
-                    else:
-                        page.session.store.set("track_is_playing", False)
-                        # print("stopped")
-                else:
-                    page.session.store.set("track_is_playing", False)
-                    # print("stopped")
         except asyncio.CancelledError as e:
             print(f"CancelledError: {e}")
 
@@ -91,8 +86,9 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
     timer = ft.Text("", size=TEXT_SIZE)
 
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
-    pause_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_pause)
-    resume_button = ft.IconButton(ft.Icons.PLAY_CIRCLE_OUTLINED, on_click=_resume)
+    pause_button = ft.IconButton(ft.Icons.PAUSE_ROUNDED, on_click=_pause)
+    stop_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_stop)
+    # resume_button = ft.IconButton(ft.Icons.PLAY_CIRCLE_OUTLINED, on_click=_resume)
     volume_minus_button = ft.IconButton(
         ft.Icons.VOLUME_DOWN_ROUNDED, on_click=lambda _: _set_volume(-0.1)
     )
@@ -103,7 +99,7 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
     player_control = [
         volume_minus_button,
         play_button,
-        resume_button,
+        stop_button,
         volume_plus_button,
     ]
 
@@ -201,22 +197,41 @@ async def main(page: ft.Page):
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)
         page.session.store.set("global_task_is_running", False)
-        page.session.store.set("track_is_playing", False)
+        page.session.store.set("audio_state", None)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
     await _init()
 
+    def _state_change(event: fta.AudioStateChangeEvent | None):
+
+        page.session.store.set("audio_state", event.state)
+        print(page.session.store.get("audio_state"))
+
+        match event.state:
+            case fta.AudioState.PLAYING:
+                pass
+            case fta.AudioState.STOPPED:
+                pass
+            case fta.AudioState.PAUSED:
+                pass
+            case fta.AudioState.COMPLETED:
+                pass
+            case fta.AudioState.DISPOSED:
+                pass
+            case None:
+                pass
+
     audio = fta.Audio(
         src=playlist[Track.MOMENT.value],
         autoplay=False,
         volume=0.5,
         balance=0,
-        # on_loaded=lambda _: print("Loaded"),
+        on_loaded=lambda _: print("Loaded"),
         # on_duration_change=lambda e: print("Duration changed:", e.duration),
         # on_position_change=lambda e: print("Position changed:", e.position),
-        # on_state_change=lambda e: print("State changed:", e.state),
+        on_state_change=lambda e: _state_change(e),
         # on_seek_complete=lambda _: print("Seek complete"),
     )
 
