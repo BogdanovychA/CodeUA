@@ -7,7 +7,13 @@ import flet_audio as fta
 
 from routes import about, error404, root, settings
 from utils import elements, storage, utils
-from utils.config import DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE, playlist
+from utils.config import (
+    APP_NAME,
+    DEFAULT_ALARM_TIME,
+    DEFAULT_TRACK,
+    TEXT_SIZE,
+    playlist,
+)
 from utils.models import Track
 
 
@@ -240,23 +246,22 @@ async def main(page: ft.Page):
 
     async def _init() -> None:
 
-        alarm_time = await storage.load("alarm_time")
-        if alarm_time is None:
-            await storage.save("alarm_time", DEFAULT_ALARM_TIME.copy())
-            alarm_time = await storage.load("alarm_time")
-        page.session.store.set("alarm_time", alarm_time)
+        async def __init_obj(name: str, default_value: object):
 
-        track_name = await storage.load("track_name")
-        if track_name is None:
-            await storage.save("track_name", DEFAULT_TRACK)
-            track_name = await storage.load("track_name")
-        page.session.store.set("track_name", track_name)
+            is_contains = await ft.SharedPreferences().contains_key(
+                f"{APP_NAME}.{name}"
+            )
+            if is_contains:
+                value = await storage.load(name)
+            else:
+                value = default_value
+                await storage.save(name, value)
 
-        alarm_on = await storage.load("alarm_on")
-        if alarm_on is None:
-            await storage.save("alarm_on", True)
-            alarm_on = await storage.load("alarm_on")
-        page.session.store.set("alarm_on", alarm_on)
+            page.session.store.set(name, value)
+
+        await __init_obj("alarm_time", DEFAULT_ALARM_TIME.copy())
+        await __init_obj("track_name", DEFAULT_TRACK)
+        await __init_obj("alarm_on", True)
 
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)

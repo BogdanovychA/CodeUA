@@ -17,25 +17,19 @@ async def save(name: str, obj: object) -> None:
 
 async def load(name: str) -> object:
 
-    name_obj = f"{APP_NAME}.{name}"
+    obj_json = await ft.SharedPreferences().get(f"{APP_NAME}.{name}")
+    obj = json.loads(obj_json)
 
-    is_contains = await ft.SharedPreferences().contains_key(name_obj)
-
-    if is_contains:
-        obj_json = await ft.SharedPreferences().get(name_obj)
-        obj = json.loads(obj_json)
-        return obj
-    else:
-        return None
+    return obj
 
 
 async def clear() -> None:
 
-    # await list_keys()
+    await list_keys()
 
     await ft.SharedPreferences().clear()
 
-    # await list_keys()
+    await list_keys()
 
 
 async def list_keys() -> None:
