@@ -52,6 +52,23 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
                 timer.value = time_left
                 timer.update()
 
+            if page.session.store.get("alarm_on"):
+                if timer.style != ft.TextStyle(
+                    color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD
+                ):
+                    timer.style = ft.TextStyle(
+                        color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD
+                    )
+                    timer.update()
+            else:
+                if timer.style != ft.TextStyle(
+                    color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
+                ):
+                    timer.style = ft.TextStyle(
+                        color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
+                    )
+                    timer.update()
+
             audio_state = page.session.store.get("audio_state")
             match audio_state:
                 case fta.AudioState.PLAYING:
@@ -80,7 +97,14 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         on_select=_switch,
     )
 
-    timer = ft.Text("", size=TEXT_SIZE)
+    if page.session.store.get("alarm_on"):
+        timer_style = ft.TextStyle(color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD)
+    else:
+        timer_style = ft.TextStyle(
+            color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
+        )
+
+    timer = ft.Text("", size=TEXT_SIZE, style=timer_style)
 
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
     pause_button = ft.IconButton(ft.Icons.PAUSE_ROUNDED, on_click=_pause)

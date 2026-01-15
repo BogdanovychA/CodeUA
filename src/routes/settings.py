@@ -46,13 +46,28 @@ def build_view(page: ft.Page) -> ft.View:
 
         if event.control.selected[0] == Bool.TRUE.value:
             page.session.store.set("alarm_on", True)
+
+            alarm_block.style = ft.TextStyle(
+                color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD
+            )
+            alarm_block.update()
+
         else:
             page.session.store.set("alarm_on", False)
+
+            alarm_block.style = ft.TextStyle(
+                color=ft.Colors.ON_PRIMARY, weight=ft.FontWeight.BOLD
+            )
+            alarm_block.update()
 
     alarm_time = page.session.store.get("alarm_time")
     hours, minutes, seconds = (alarm_time[k] for k in ("hours", "minutes", "seconds"))
 
-    alarm_block = ft.Text(f"{hours:02}:{minutes:02}", size=TEXT_SIZE)
+    alarm_block = ft.Text(
+        f"{hours:02}:{minutes:02}",
+        style=ft.TextStyle(color=ft.Colors.PRIMARY, weight=ft.FontWeight.BOLD),
+        size=TEXT_SIZE,
+    )
 
     time_picker = ft.TimePicker(
         value=time(hour=hours, minute=minutes, second=seconds),
