@@ -211,17 +211,17 @@ async def main(page: ft.Page):
             case fta.AudioState.COMPLETED:
                 # Якщо трек відіграв, перестворюємо об'єкт
                 audio[0] = _create_audio()
-            case fta.AudioState.PLAYING:
-                pass
-            case fta.AudioState.STOPPED:
-                pass
-            case fta.AudioState.PAUSED:
-                pass
             case fta.AudioState.DISPOSED:
                 # Перестворюємо об'єкт (для перестраховки :))
                 audio[0] = _create_audio()
-            case None:
-                pass
+            # case fta.AudioState.PLAYING:
+            #     pass
+            # case fta.AudioState.STOPPED:
+            #     pass
+            # case fta.AudioState.PAUSED:
+            #     pass
+            # case None:
+            #     pass
 
     def _create_audio() -> fta.Audio:
         return fta.Audio(
