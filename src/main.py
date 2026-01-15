@@ -11,38 +11,38 @@ from utils.config import DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE, playlist
 from utils.models import Track
 
 
-def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
+def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
 
     async def _play():
         audio_state = page.session.store.get("audio_state")
         match audio_state:
             case fta.AudioState.PAUSED:
-                await audio.resume()
+                await audio[0].resume()
             case fta.AudioState.DISPOSED:  # audio player has been disposed
                 pass
             case _:
-                await audio.play()
+                await audio[0].play()
 
     async def _stop():
-        await audio.pause()
-        await audio.seek(ft.Duration(seconds=0))
+        await audio[0].pause()
+        await audio[0].seek(ft.Duration(seconds=0))
 
     async def _pause():
-        await audio.pause()
+        await audio[0].pause()
 
     # async def _resume():
-    #     await audio.resume()
+    #     await audio[0].resume()
 
     def _set_volume(value: float):
 
-        audio.volume = utils.clamp_value(audio.volume + value, 0, 1)
-        switcher.label = f"Рівень гучності: {int(audio.volume * 100)}%"
+        audio[0].volume = utils.clamp_value(audio[0].volume + value, 0, 1)
+        switcher.label = f"Рівень гучності: {int(audio[0].volume * 100)}%"
         switcher.update()
 
     async def _switch():
         await _pause()
         page.session.store.set("track_name", switcher.value)
-        audio.src = playlist[switcher.value]
+        audio[0].src = playlist[switcher.value]
 
     async def _ui_update():
         try:
@@ -73,7 +73,7 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
             print(f"CancelledError: {e}")
 
     switcher = ft.Dropdown(
-        label=f"Рівень гучності: {int(audio.volume * 100)}%",
+        label=f"Рівень гучності: {int(audio[0].volume * 100)}%",
         label_style=ft.TextStyle(size=TEXT_SIZE),
         value=page.session.store.get("track_name"),
         options=[
@@ -179,11 +179,46 @@ async def main(page: ft.Page):
             hours, minutes, seconds = utils.check_delta(**alarm_time)
 
             if hours == minutes == seconds == 0:
-                await audio.play()
+                await audio[0].play()
 
             page.session.store.set("time_left", f"{hours:02}:{minutes:02}:{seconds:02}")
 
             await asyncio.sleep(1)
+
+    async def _state_change(event: fta.AudioStateChangeEvent | None):
+
+        page.session.store.set("audio_state", event.state)
+        print(page.session.store.get("audio_state"))
+
+        nonlocal audio
+
+        match event.state:
+            case fta.AudioState.PLAYING:
+                pass
+            case fta.AudioState.STOPPED:
+                pass
+            case fta.AudioState.PAUSED:
+                pass
+            case fta.AudioState.COMPLETED:
+                audio[0] = _create_audio()
+            case fta.AudioState.DISPOSED:
+                pass
+            case None:
+                pass
+
+    def _create_audio() -> fta.Audio:
+        return fta.Audio(
+            src=playlist[page.session.store.get("track_name")],
+            autoplay=False,
+            volume=0.5,
+            balance=0,
+            on_loaded=lambda _: print("Loaded"),
+            # on_duration_change=lambda e: print("Duration changed:", e.duration),
+            # on_position_change=lambda e: print("Position changed:", e.position),
+            # on_state_change=lambda e: _state_change(e),
+            on_state_change=lambda e: asyncio.create_task(_state_change(e)),
+            # on_seek_complete=lambda _: print("Seek complete"),
+        )
 
     async def _init() -> None:
 
@@ -204,39 +239,9 @@ async def main(page: ft.Page):
 
     await _init()
 
-    def _state_change(event: fta.AudioStateChangeEvent | None):
-
-        page.session.store.set("audio_state", event.state)
-        print(page.session.store.get("audio_state"))
-
-        match event.state:
-            case fta.AudioState.PLAYING:
-                pass
-            case fta.AudioState.STOPPED:
-                pass
-            case fta.AudioState.PAUSED:
-                pass
-            case fta.AudioState.COMPLETED:
-                pass
-            case fta.AudioState.DISPOSED:
-                pass
-            case None:
-                pass
-
-    audio = fta.Audio(
-        src=playlist[Track.MOMENT.value],
-        autoplay=False,
-        volume=0.5,
-        balance=0,
-        on_loaded=lambda _: print("Loaded"),
-        # on_duration_change=lambda e: print("Duration changed:", e.duration),
-        # on_position_change=lambda e: print("Position changed:", e.position),
-        on_state_change=lambda e: _state_change(e),
-        # on_seek_complete=lambda _: print("Seek complete"),
-    )
+    audio = [_create_audio()]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
-
     if not global_task_is_running:
         page.run_task(_check_time)
 
