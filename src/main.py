@@ -37,42 +37,45 @@ def build_main_view(page: ft.Page, audio: fta.Audio) -> ft.View:
         audio.src = playlist[switcher.value]
 
     async def _ui_update():
+        try:
+            while True:
+                time_left = page.session.store.get("time_left")
+                if timer.value != time_left:
+                    timer.value = time_left
+                    timer.update()
 
-        while True:
-            if timer.value != page.session.store.get("time_left"):
-                timer.value = page.session.store.get("time_left")
-                timer.update()
+                if page.session.store.get("track_is_playing"):
+                    if player_control[2] != pause_button:
+                        player_control[2] = pause_button
+                        controller.update()
+                else:
+                    if player_control[2] != resume_button:
+                        player_control[2] = resume_button
+                        controller.update()
 
-            if page.session.store.get("track_is_playing"):
-                if player_control[2] != pause_button:
-                    player_control[2] = pause_button
-                    controller.update()
-            else:
-                if player_control[2] != resume_button:
-                    player_control[2] = resume_button
-                    controller.update()
+                duration1 = await audio.get_current_position()
 
-            duration1 = await audio.get_current_position()
+                await asyncio.sleep(0.5)
 
-            await asyncio.sleep(0.1)
+                duration2 = await audio.get_current_position()
 
-            duration2 = await audio.get_current_position()
-
-            if duration1 and duration2:
-                if (
-                    duration1.microseconds != duration2.microseconds
-                    or duration1.milliseconds != duration2.milliseconds
-                    or duration1.seconds != duration2.seconds
-                    or duration1.minutes != duration2.minutes
-                ):
-                    page.session.store.set("track_is_playing", True)
-                    # print("playing")
+                if duration1 and duration2:
+                    if (
+                        duration1.microseconds != duration2.microseconds
+                        or duration1.milliseconds != duration2.milliseconds
+                        or duration1.seconds != duration2.seconds
+                        or duration1.minutes != duration2.minutes
+                    ):
+                        page.session.store.set("track_is_playing", True)
+                        # print("playing")
+                    else:
+                        page.session.store.set("track_is_playing", False)
+                        # print("stopped")
                 else:
                     page.session.store.set("track_is_playing", False)
                     # print("stopped")
-            else:
-                page.session.store.set("track_is_playing", False)
-                # print("stopped")
+        except asyncio.CancelledError as e:
+            print(f"CancelledError: {e}")
 
     switcher = ft.Dropdown(
         label=f"Рівень гучності: {int(audio.volume * 100)}%",
