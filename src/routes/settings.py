@@ -6,6 +6,7 @@ import flet as ft
 
 from utils import elements, storage
 from utils.config import BASE_URL, DEFAULT_ALARM_TIME, TEXT_SIZE
+from utils.models import Bool
 
 TITLE = "Налаштування"
 ROUTE = BASE_URL + "/settings"
@@ -41,6 +42,13 @@ def build_view(page: ft.Page) -> ft.View:
 
         await _set_alarm(new_alarm_time)
 
+    def _switch(event: ft.Event) -> None:
+
+        if event.control.selected[0] == Bool.TRUE.value:
+            page.session.store.set("alarm_on", True)
+        else:
+            page.session.store.set("alarm_on", False)
+
     alarm_time = page.session.store.get("alarm_time")
     hours, minutes, seconds = (alarm_time[k] for k in ("hours", "minutes", "seconds"))
 
@@ -55,6 +63,28 @@ def build_view(page: ft.Page) -> ft.View:
         on_change=_change,
     )
 
+    alarm_on_selector = ft.SegmentedButton(
+        selected=[
+            Bool.TRUE.value if page.session.store.get("alarm_on") else Bool.FALSE.value
+        ],
+        allow_empty_selection=False,
+        allow_multiple_selection=False,
+        show_selected_icon=False,
+        segments=[
+            ft.Segment(
+                value=Bool.TRUE.value,
+                # label=ft.Text(Bool.TRUE.value),
+                icon=ft.Icons.NOTIFICATIONS_ACTIVE_ROUNDED,
+            ),
+            ft.Segment(
+                value=Bool.FALSE.value,
+                # label=ft.Text(Bool.FALSE.value),
+                icon=ft.Icons.NOTIFICATIONS_OFF_ROUNDED,
+            ),
+        ],
+        on_change=_switch,
+    )
+
     return ft.View(
         route=ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -63,6 +93,7 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Text(TITLE, size=TEXT_SIZE),
             ft.Text(""),
+            alarm_on_selector,
             ft.Text("Час запуску:", size=TEXT_SIZE),
             alarm_block,
             ft.Row(

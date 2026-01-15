@@ -6,3 +6,8 @@ from enum import Enum
 class Track(Enum):
     MOMENT = "moment"
     ANTHEM = "anthem"
+
+
+class Bool(Enum):
+    TRUE = "true"
+    FALSE = "false"

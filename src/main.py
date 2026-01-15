@@ -175,7 +175,7 @@ async def main(page: ft.Page):
             alarm_time = page.session.store.get("alarm_time")
             hours, minutes, seconds = utils.check_delta(**alarm_time)
 
-            if hours == minutes == seconds == 0:
+            if page.session.store.get("alarm_on") and hours == minutes == seconds == 0:
                 await audio[0].play()
 
             page.session.store.set("time_left", f"{hours:02}:{minutes:02}:{seconds:02}")
@@ -230,6 +230,7 @@ async def main(page: ft.Page):
         page.session.store.set("_ui_update_task", None)
         page.session.store.set("global_task_is_running", False)
         page.session.store.set("audio_state", None)
+        page.session.store.set("alarm_on", True)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
