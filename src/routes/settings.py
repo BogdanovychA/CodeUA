@@ -12,6 +12,7 @@ from utils.config import (
     DEFAULT_TRACK,
     DEFAULT_VOLUME,
     TEXT_SIZE,
+    playlist,
 )
 from utils.models import Bool
 
@@ -46,6 +47,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
 
         await storage.save("track_name", DEFAULT_TRACK)
         page.session.store.set("track_name", DEFAULT_TRACK)
+        audio[0].src = playlist[DEFAULT_TRACK]
         await audio[0].pause()
         await audio[0].seek(ft.Duration(0))
 
