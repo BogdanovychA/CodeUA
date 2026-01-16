@@ -25,11 +25,11 @@ async def load(name: str) -> object:
 
 async def clear() -> None:
 
-    await list_keys()
+    # await list_keys()
 
     await ft.SharedPreferences().clear()
 
-    await list_keys()
+    # await list_keys()
 
 
 async def list_keys() -> None:
