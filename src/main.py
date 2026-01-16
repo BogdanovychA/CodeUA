@@ -11,6 +11,7 @@ from utils.config import (
     APP_NAME,
     DEFAULT_ALARM_TIME,
     DEFAULT_TRACK,
+    DEFAULT_VOLUME,
     TEXT_SIZE,
     playlist,
 )
@@ -31,7 +32,7 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
 
     async def _stop():
         await audio[0].pause()
-        await audio[0].seek(ft.Duration(seconds=0))
+        await audio[0].seek(ft.Duration(0))
 
     async def _pause():
         await audio[0].pause()
@@ -265,7 +266,7 @@ async def main(page: ft.Page):
         await __init_obj("alarm_time", DEFAULT_ALARM_TIME.copy())
         await __init_obj("track_name", DEFAULT_TRACK)
         await __init_obj("alarm_on", True)
-        await __init_obj("volume", 0.5)
+        await __init_obj("volume", DEFAULT_VOLUME)
 
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)

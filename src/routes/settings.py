@@ -5,7 +5,13 @@ from datetime import time
 import flet as ft
 
 from utils import elements, storage
-from utils.config import BASE_URL, DEFAULT_ALARM_TIME, DEFAULT_TRACK, TEXT_SIZE
+from utils.config import (
+    BASE_URL,
+    DEFAULT_ALARM_TIME,
+    DEFAULT_TRACK,
+    DEFAULT_VOLUME,
+    TEXT_SIZE,
+)
 from utils.models import Bool
 
 TITLE = "Налаштування"
@@ -40,10 +46,10 @@ def build_view(page: ft.Page, audio) -> ft.View:
         await storage.save("track_name", DEFAULT_TRACK)
         page.session.store.set("track_name", DEFAULT_TRACK)
         await audio[0].pause()
-        await audio[0].seek(ft.Duration(seconds=0))
+        await audio[0].seek(ft.Duration(0))
 
-        audio[0].volume = 0.5
-        await storage.save("volume", 0.5)
+        audio[0].volume = DEFAULT_VOLUME
+        await storage.save("volume", DEFAULT_VOLUME)
 
         alarm_block.style.color = ft.Colors.PRIMARY
         alarm_block.update()
