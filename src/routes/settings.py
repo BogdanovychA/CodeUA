@@ -4,6 +4,7 @@ from datetime import time
 
 import flet as ft
 
+from routes import about
 from utils import elements, storage
 from utils.config import (
     BASE_URL,
@@ -154,6 +155,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
                 on_click=_clear_cache,
             ),
             ft.Text(""),
+            about.button(page),
             elements.back_button(page),
         ],
     )
