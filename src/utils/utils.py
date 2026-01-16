@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 
 def check_delta(hours, minutes, seconds) -> tuple[int, int, int]:
+    """Підрахунок часу до спрацювання будильнику"""
 
     now = datetime.now()
     alarm_time = now.replace(hour=hours, minute=minutes, second=seconds, microsecond=0)

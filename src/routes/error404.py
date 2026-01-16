@@ -10,6 +10,7 @@ ROUTE = BASE_URL + "/404"
 
 
 def build_view(page: ft.Page) -> ft.View:
+    """Екран 404 помилки"""
 
     return ft.View(
         route=ROUTE,

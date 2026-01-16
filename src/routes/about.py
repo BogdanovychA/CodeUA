@@ -12,6 +12,8 @@ ROUTE = BASE_URL + "/about"
 
 
 def button(page) -> ft.Button:
+    "Кнопка екрану про автора"
+
     return ft.Button(
         TITLE,
         on_click=lambda: asyncio.create_task(page.push_route(ROUTE)),
@@ -19,6 +21,8 @@ def button(page) -> ft.Button:
 
 
 def build_view(page: ft.Page) -> ft.View:
+    """Екран про автора"""
+
     page.title = TITLE
     return ft.View(
         route=ROUTE,

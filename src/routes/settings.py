@@ -21,12 +21,44 @@ ROUTE = BASE_URL + "/settings"
 
 
 def build_view(page: ft.Page, audio) -> ft.View:
+    """Екран налаштувань"""
 
     async def _clear_cache() -> None:
+        """Обробник кнопки очистки кешу"""
+
         await storage.clear()
         await _reset()
 
+    async def _reset() -> None:
+        """Обробник кнопки скидання налаштувань"""
+
+        # Скидання часу будильника
+        new_alarm_time = DEFAULT_ALARM_TIME.copy()
+        await _set_alarm(new_alarm_time)
+
+        # Скидання вкл/викл будильника
+        page.session.store.set("alarm_on", True)
+        await storage.save("alarm_on", True)
+        alarm_on_selector.selected[0] = Bool.TRUE.value
+        alarm_on_selector.update()
+
+        # Скидання треку
+        await storage.save("track_name", DEFAULT_TRACK)
+        page.session.store.set("track_name", DEFAULT_TRACK)
+        audio[0].src = playlist[DEFAULT_TRACK]
+        await audio[0].pause()
+        await audio[0].seek(ft.Duration(0))
+
+        # Скидання гучності
+        audio[0].volume = DEFAULT_VOLUME
+        await storage.save("volume", DEFAULT_VOLUME)
+
+        # Скидання кольору будильника
+        alarm_block.style.color = ft.Colors.PRIMARY
+        alarm_block.update()
+
     async def _set_alarm(new_alarm_time: dict) -> None:
+        """Встановлення будильника"""
 
         page.session.store.set("alarm_time", new_alarm_time)
         await storage.save("alarm_time", new_alarm_time)
@@ -36,28 +68,8 @@ def build_view(page: ft.Page, audio) -> ft.View:
         )
         alarm_block.update()
 
-    async def _reset() -> None:
-        new_alarm_time = DEFAULT_ALARM_TIME.copy()
-        await _set_alarm(new_alarm_time)
-
-        page.session.store.set("alarm_on", True)
-        await storage.save("alarm_on", True)
-        alarm_on_selector.selected[0] = Bool.TRUE.value
-        alarm_on_selector.update()
-
-        await storage.save("track_name", DEFAULT_TRACK)
-        page.session.store.set("track_name", DEFAULT_TRACK)
-        audio[0].src = playlist[DEFAULT_TRACK]
-        await audio[0].pause()
-        await audio[0].seek(ft.Duration(0))
-
-        audio[0].volume = DEFAULT_VOLUME
-        await storage.save("volume", DEFAULT_VOLUME)
-
-        alarm_block.style.color = ft.Colors.PRIMARY
-        alarm_block.update()
-
     async def _change() -> None:
+        """Обробник зміни часу будильника"""
 
         new_alarm_time = {
             "hours": time_picker.value.hour,
@@ -68,6 +80,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
         await _set_alarm(new_alarm_time)
 
     async def _switch(event: ft.Event) -> None:
+        """Обробник перемикача вкл/викл будильника"""
 
         if event.control.selected[0] == Bool.TRUE.value:
             page.session.store.set("alarm_on", True)

@@ -8,6 +8,7 @@ from utils.config import APP_NAME
 
 
 async def save(name: str, obj: object) -> None:
+    """Зберегти налаштування в кеш"""
 
     name_obj = f"{APP_NAME}.{name}"
     obj_json = json.dumps(obj)
@@ -16,6 +17,7 @@ async def save(name: str, obj: object) -> None:
 
 
 async def load(name: str) -> object:
+    """Зчитати налаштування з кешу"""
 
     obj_json = await ft.SharedPreferences().get(f"{APP_NAME}.{name}")
     obj = json.loads(obj_json)
@@ -24,6 +26,7 @@ async def load(name: str) -> object:
 
 
 async def clear() -> None:
+    """Очистка кешу"""
 
     # await list_keys()
 
@@ -33,5 +36,7 @@ async def clear() -> None:
 
 
 async def list_keys() -> None:
+    """Лістинг всіх збережених даних в кеші"""
+
     keys = await ft.SharedPreferences().get_keys("")
     print(keys)

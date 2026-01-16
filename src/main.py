@@ -19,8 +19,11 @@ from utils.models import Track
 
 
 def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
+    """Головний екран застосунку"""
 
     async def _play():
+        """Обробник натискання кнопки play"""
+
         audio_state = page.session.store.get("audio_state")
         match audio_state:
             case fta.AudioState.PAUSED:
@@ -31,16 +34,21 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
                 await audio[0].play()
 
     async def _stop():
+        """Обробник натискання кнопки stop"""
+
         await audio[0].pause()
         await audio[0].seek(ft.Duration(0))
 
     async def _pause():
+        """Обробник натискання кнопки pause"""
+
         await audio[0].pause()
 
     # async def _resume():
     #     await audio[0].resume()
 
     async def _set_volume(value: float):
+        """Обробник кнопок зміни гучності"""
 
         audio[0].volume = utils.clamp_value(audio[0].volume + value, 0, 1)
         await storage.save("volume", audio[0].volume)
@@ -48,12 +56,15 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         switcher.update()
 
     async def _switch():
+        """Обробник зміни треків"""
+
         await _pause()
         page.session.store.set("track_name", switcher.value)
         await storage.save("track_name", switcher.value)
         audio[0].src = playlist[switcher.value]
 
     async def _ui_update():
+        """Фоновий таск оновлення інтерфейсу"""
 
         while True:
             time_left = page.session.store.get("time_left")
@@ -168,11 +179,14 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
 
 
 async def main(page: ft.Page):
+    """Головна функція запуску застосунку"""
+
     page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
     page.route = root.ROUTE
 
     async def route_change():
+        """Обробник перемикання екранів"""
 
         _ui_update_task = page.session.store.get("_ui_update_task")
         if _ui_update_task:
@@ -198,6 +212,7 @@ async def main(page: ft.Page):
             await page.push_route(top_view.route)
 
     async def _check_time():
+        """Головний фоновий обробник автоматичного спрацювання мелодії"""
 
         page.session.store.set("global_task_is_running", True)
 
@@ -214,6 +229,7 @@ async def main(page: ft.Page):
             await asyncio.sleep(1)
 
     def _state_change(event: fta.AudioStateChangeEvent | None):
+        """Обробник зміни статусу програвання мелодії"""
 
         page.session.store.set("audio_state", event.state)
         # print(page.session.store.get("audio_state"))
@@ -235,6 +251,8 @@ async def main(page: ft.Page):
             #     pass
 
     def _create_audio() -> fta.Audio:
+        """Створення об'єкту плеера"""
+
         return fta.Audio(
             src=playlist[page.session.store.get("track_name")],
             autoplay=False,
@@ -249,8 +267,11 @@ async def main(page: ft.Page):
         )
 
     async def _init() -> None:
+        """Стартова ініціалізація змінних"""
 
         async def __init_obj(name: str, default_value: object):
+            """Допоміжна функція ініціалізації об'єктів,
+            зчитування налаштувань з кешу"""
 
             is_contains = await ft.SharedPreferences().contains_key(
                 f"{APP_NAME}.{name}"
@@ -279,7 +300,7 @@ async def main(page: ft.Page):
     await _init()
 
     # Об'єкт вкладаємо в єдиний елемент списку, щоб мати можливість
-    # його перестворювати, не змінюючи посилання
+    # його перестворювати, не змінюючи посилання на об'єкт
     audio = [_create_audio()]
 
     global_task_is_running = page.session.store.get("global_task_is_running")

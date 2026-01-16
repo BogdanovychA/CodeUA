@@ -9,6 +9,8 @@ from utils.config import LINK_COLOR, TITLE_SIZE
 
 
 def back_button(page) -> ft.Button:
+    """Кнопка 'назад'"""
+
     return ft.Button(
         "На головну",
         icon=ft.Icons.ARROW_BACK,
@@ -17,6 +19,7 @@ def back_button(page) -> ft.Button:
 
 
 def app_bar(title, page) -> ft.AppBar:
+    """Верхня панель застосунку"""
 
     from routes import settings
 
@@ -34,6 +37,8 @@ def app_bar(title, page) -> ft.AppBar:
 
 
 def link(text: str, url: str) -> ft.TextSpan:
+    """Функція створення посилань та обробки наведення на них курсору"""
+
     style_normal = ft.TextStyle(decoration=ft.TextDecoration.NONE, color=LINK_COLOR)
     style_hover = ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE, color=LINK_COLOR)
 
