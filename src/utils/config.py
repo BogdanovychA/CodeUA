@@ -28,5 +28,6 @@ DEFAULT_VOLUME = 0.5
 playlist = {
     Track.MOMENT.value: "/sounds/moment_of_silence.mp3",
     # Track.ANTHEM.value: "/sounds/anthem_of_Ukraine-1.ogx",
-    Track.ANTHEM.value: "/sounds/anthem_of_Ukraine-2.mp3",
+    Track.ANTHEM.value: "/sounds/anthem_of_Ukraine-1.mp3",
+    # Track.ANTHEM.value: "/sounds/anthem_of_Ukraine-2.mp3",
 }
