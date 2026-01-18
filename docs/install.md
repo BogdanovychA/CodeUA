@@ -1,6 +1,6 @@
 ```bash
 git clone https://github.com/BogdanovychA/CodeUA.git
-cd bmg
+cd CodeUA
 python3 -m venv .venv       # або 'python.exe -m venv .venv' на Windows
 source .venv/bin/activate      # або '.venv\Scripts\activate.bat' чи '.venv\Scripts\Activate.ps1' на Windows
 pip install -r requirements.txt
