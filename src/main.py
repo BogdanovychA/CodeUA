@@ -234,21 +234,21 @@ async def main(page: ft.Page):
         page.session.store.set("audio_state", event.state)
         # print(page.session.store.get("audio_state"))
 
-        match event.state:
-            case fta.AudioState.COMPLETED:
-                # Якщо трек відіграв, перестворюємо об'єкт
-                audio[0] = _create_audio()
-            case fta.AudioState.DISPOSED:
-                # Перестворюємо об'єкт (для перестраховки :))
-                audio[0] = _create_audio()
-            # case fta.AudioState.PLAYING:
-            #     pass
-            # case fta.AudioState.STOPPED:
-            #     pass
-            # case fta.AudioState.PAUSED:
-            #     pass
-            # case None:
-            #     pass
+        # match event.state:
+        #     case fta.AudioState.COMPLETED:
+        #         # Якщо трек відіграв, перестворюємо об'єкт
+        #         audio[0] = _create_audio()
+        #     case fta.AudioState.DISPOSED:
+        #         # Перестворюємо об'єкт (для перестраховки :))
+        #         audio[0] = _create_audio()
+        #     case fta.AudioState.PLAYING:
+        #         pass
+        #     case fta.AudioState.STOPPED:
+        #         pass
+        #     case fta.AudioState.PAUSED:
+        #         pass
+        #     case None:
+        #         pass
 
     def _create_audio() -> fta.Audio:
         """Створення об'єкту плеера"""
@@ -256,6 +256,7 @@ async def main(page: ft.Page):
         return fta.Audio(
             src=playlist[page.session.store.get("track_name")],
             autoplay=False,
+            release_mode=fta.ReleaseMode.STOP,
             volume=page.session.store.get("volume"),
             balance=0,
             # on_state_change=lambda e: asyncio.create_task(_state_change(e)),
