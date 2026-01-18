@@ -1,43 +1,29 @@
-# CodeUA app
+# CodeUA (Код українця)
 
-## Build the app
+Вшануйте пам’ять тих, хто віддав життя за Україну.
 
-### Android
+Згідно з Указом Президента України, щодня о 9:00 ранку проводиться загальнонаціональна хвилина мовчання. Цей застосунок створений для того, щоб ви могли приєднатися до спільної молитви та вшанування пам’яті Героїв і цивільних жертв у будь-якому місці.
 
-```
-flet build apk -v
-```
+Основні можливості:
 
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://docs.flet.dev/publish/android/).
+* Автоматичне нагадування: Застосунок щодня о 09:00 запускає звук хвилини мовчання та Державний Гімн України.
 
-### iOS
+* Гнучке налаштування часу: Ви можете змінити час сповіщення відповідно до власного розкладу або обставин, щоб ніколи не пропустити момент вшанування.
 
-```
-flet build ipa -v
-```
+* Вибір аудіосупроводу: Використовуйте стандартний звук метронома або урочистий запис Гімну.
 
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://docs.flet.dev/publish/ios/).
+* Лаконічний дизайн: Простий інтерфейс, що не відволікає від головного — поваги та пам’яті.
 
-### macOS
+Чому це важливо? Пам'ять — це наша зброя. Кожна секунда тиші о дев'ятій ранку — це наш спільний вияв вдячності захисникам, які виборюють нашу свободу. Додаток допоможе зробити цей ритуал частиною вашого повсякденного життя, де б ви не були: в офісі, за кермом чи вдома.
 
-```
-flet build macos -v
-```
+Герої не вмирають, поки ми про них пам’ятаємо.
 
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://docs.flet.dev/publish/macos/).
+## Користуватися:
 
-### Linux
+* [Веб-версія](https://codeua.foundation101.org/)
+* [Android (Google Play)](https://play.google.com/store/apps/details?id=org.foundation101.codeua)
 
-```
-flet build linux -v
-```
+### Документація
 
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://docs.flet.dev/publish/linux/).
+* [Build the app](docs/build.md)
 
-### Windows
-
-```
-flet build windows -v
-```
-
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://docs.flet.dev/publish/windows/).
