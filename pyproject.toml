@@ -1,9 +1,9 @@
 [project]
-name = "CodeUA"
+name = "codeua"
 version = "1.0.2"
-description = "CodeUA for Ukrainian people"
+description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
-requires-python = "==3.13"
+requires-python = "==3.14"
 authors = [
     { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
@@ -12,17 +12,12 @@ dependencies = [
   "flet-audio>=0.80.2"
 ]
 
-[dependency-groups]
-dev = [
-  "flet[all]>=0.80.1",
-  "flet-audio>=0.80.1"
-]
-
 [tool.flet]
 org = "org.foundation101"
 product = "CodeUA"
-company = "Founation.101"
-copyright = "Copyright (C) 2026 by Foundation.101"
+description = "Щоденне вшанування пам’яті Героїв України. Хвилина мовчання та Гімн"
+company = "NGO Foundation.101"
+copyright = "Copyright (C) 2026 by NGO Foundation.101"
 
 [tool.flet.app]
 path = "src"
