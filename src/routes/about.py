@@ -4,15 +4,16 @@ import asyncio
 
 import flet as ft
 
+from routes import author
 from utils import elements
 from utils.config import BASE_URL, TEXT_SIZE
 
-TITLE = "Про автора"
+TITLE = "Про застосунок"
 ROUTE = BASE_URL + "/about"
 
 
 def button(page) -> ft.Button:
-    "Кнопка екрану про автора"
+    "Кнопка екрану про застосунок"
 
     return ft.Button(
         TITLE,
@@ -29,21 +30,12 @@ def build_view(page: ft.Page) -> ft.View:
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE, page),
-            ft.Text("Андрій БОГДАНОВИЧ", size=TEXT_SIZE),
+            ft.Text("CodeUA (код українця)", size=TEXT_SIZE),
             ft.Text(""),
             ft.Image(
-                src="/images/bogdanovych.jpg",
+                src="/images/foundation101-512x512.png",
                 width=200,
                 height=200,
-            ),
-            ft.Text(""),
-            ft.Text(
-                size=TEXT_SIZE,
-                spans=[
-                    elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
-                    ft.TextSpan("\n"),
-                    elements.link("GitHub", "https://github.com/BogdanovychA/CodeUA"),
-                ],
             ),
             ft.Text(""),
             ft.Text(
@@ -59,6 +51,21 @@ def build_view(page: ft.Page) -> ft.View:
                 ],
             ),
             ft.Text(""),
+            ft.Text(
+                size=TEXT_SIZE,
+                spans=[
+                    elements.link("Веб-версія", "https://codeua.foundation101.org"),
+                    ft.TextSpan("\n"),
+                    elements.link(
+                        "Android (Google Play)",
+                        "https://play.google.com/store/apps/details?id=org.foundation101.codeua",
+                    ),
+                    ft.TextSpan("\n"),
+                    elements.link("GitHub", "https://github.com/BogdanovychA/CodeUA"),
+                ],
+            ),
+            ft.Text(""),
+            author.button(page),
             elements.back_button(page),
         ],
     )

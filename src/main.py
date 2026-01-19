@@ -5,7 +5,7 @@ import asyncio
 import flet as ft
 import flet_audio as fta
 
-from routes import about, error404, root, settings
+from routes import about, author, error404, root, settings
 from utils import elements, storage, utils
 from utils.config import (
     APP_NAME,
@@ -173,7 +173,13 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
             switcher,
             controller,
             ft.Text(""),
-            about.button(page),
+            ft.Row(
+                controls=[
+                    author.button(page),
+                    about.button(page),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
         ],
     )
 
@@ -197,6 +203,8 @@ async def main(page: ft.Page):
         match page.route:
             case settings.ROUTE:
                 page.views.append(settings.build_view(page, audio))
+            case author.ROUTE:
+                page.views.append(author.build_view(page))
             case about.ROUTE:
                 page.views.append(about.build_view(page))
             case _:
