@@ -8,6 +8,7 @@ class Track(Enum):
 
     MOMENT = "moment"
     ANTHEM = "anthem"
+    ANTHEM_2 = "anthem_2"
 
 
 class Bool(Enum):

@@ -104,7 +104,10 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         value=page.session.store.get("track_name"),
         options=[
             ft.DropdownOption(key=Track.MOMENT.value, text="Хвилина мовчання"),
-            ft.DropdownOption(key=Track.ANTHEM.value, text="Гімн України"),
+            ft.DropdownOption(key=Track.ANTHEM.value, text="Гімн України (варіант 1)"),
+            ft.DropdownOption(
+                key=Track.ANTHEM_2.value, text="Гімн України (варіант 2)"
+            ),
         ],
         on_select=_switch,
     )

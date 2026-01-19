@@ -31,7 +31,7 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text("CodeUA (код українця)", size=TEXT_SIZE),
-            ft.Text(""),
+            ft.Text("Версія 1.0.3"),
             ft.Image(
                 src="/images/foundation101-512x512.png",
                 width=200,
