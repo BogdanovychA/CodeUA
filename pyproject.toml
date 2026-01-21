@@ -1,6 +1,6 @@
 [project]
 name = "codeua"
-version = "1.0.3"
+version = "1.0.4"
 description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
 requires-python = "==3.14"

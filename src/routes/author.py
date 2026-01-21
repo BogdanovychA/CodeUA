@@ -42,6 +42,8 @@ def build_view(page: ft.Page) -> ft.View:
                 size=TEXT_SIZE,
                 spans=[
                     elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
+                    ft.TextSpan("\n"),
+                    elements.link("Інші застосунки", "https://apps.bogdanovych.org"),
                 ],
             ),
             ft.Text(""),
