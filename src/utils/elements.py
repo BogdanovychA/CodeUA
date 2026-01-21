@@ -12,7 +12,7 @@ def back_button(page) -> ft.Button:
     """Кнопка 'назад'"""
 
     return ft.Button(
-        "На головну",
+        "Назад",
         icon=ft.Icons.ARROW_BACK,
         on_click=lambda: asyncio.create_task(page.push_route(root.ROUTE)),
     )
