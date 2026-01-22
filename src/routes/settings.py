@@ -115,6 +115,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
         error_invalid_text="Не коректний час",
         help_text="Встанови час",
         entry_mode=ft.TimePickerEntryMode.DIAL,
+        hour_format=ft.TimePickerHourFormat.H24,
         on_change=_change,
     )
 
