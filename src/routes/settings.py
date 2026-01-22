@@ -42,6 +42,10 @@ def build_view(page: ft.Page, audio) -> ft.View:
         alarm_on_selector.selected[0] = Bool.TRUE.value
         alarm_on_selector.update()
 
+        # Скидання кольору будильника
+        alarm_block.style.color = ft.Colors.PRIMARY
+        alarm_block.update()
+
         # Скидання треку
         await storage.save("track_name", DEFAULT_TRACK)
         page.session.store.set("track_name", DEFAULT_TRACK)
@@ -52,10 +56,6 @@ def build_view(page: ft.Page, audio) -> ft.View:
         # Скидання гучності
         audio[0].volume = DEFAULT_VOLUME
         await storage.save("volume", DEFAULT_VOLUME)
-
-        # Скидання кольору будильника
-        alarm_block.style.color = ft.Colors.PRIMARY
-        alarm_block.update()
 
     async def _set_alarm(new_alarm_time: dict) -> None:
         """Встановлення будильника"""
@@ -164,11 +164,11 @@ def build_view(page: ft.Page, audio) -> ft.View:
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
-            ft.Button(
-                content="Видалити кеш",
-                icon=ft.Icons.DELETE_SWEEP,
-                on_click=_clear_cache,
-            ),
+            # ft.Button(
+            #     content="Видалити кеш",
+            #     icon=ft.Icons.DELETE_SWEEP,
+            #     on_click=_clear_cache,
+            # ),
             ft.Text(""),
             ft.Row(
                 controls=[
