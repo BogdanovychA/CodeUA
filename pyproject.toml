@@ -1,6 +1,6 @@
 [project]
 name = "codeua"
-version = "1.0.4"
+version = "1.0.5"
 description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
 requires-python = "==3.14"
@@ -9,7 +9,8 @@ authors = [
 ]
 dependencies = [
   "flet>=0.80.2",
-  "flet-audio>=0.80.2"
+  "flet-audio>=0.80.2",
+  "httpx>=0.28.1",
 ]
 
 [tool.flet]

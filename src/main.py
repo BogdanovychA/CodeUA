@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+import uuid
 
 import flet as ft
 import flet_audio as fta
 
 from routes import about, author, error404, root, settings
-from utils import elements, storage, utils
+from utils import elements
+from utils import measurement_api as ga
+from utils import storage, utils
 from utils.config import (
     APP_NAME,
     DEFAULT_ALARM_TIME,
@@ -197,6 +200,14 @@ async def main(page: ft.Page):
     async def route_change():
         """Обробник перемикання екранів"""
 
+        page.run_task(
+            ga.log_event,
+            page.session.store.get("client_id"),
+            str(page.platform.value),
+            "route_change",
+            page.route,
+        )
+
         _ui_update_task = page.session.store.get("_ui_update_task")
         if _ui_update_task:
             _ui_update_task.cancel()
@@ -300,6 +311,7 @@ async def main(page: ft.Page):
         await __init_obj("track_name", DEFAULT_TRACK)
         await __init_obj("alarm_on", True)
         await __init_obj("volume", DEFAULT_VOLUME)
+        await __init_obj("client_id", str(uuid.uuid4()))
 
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)
