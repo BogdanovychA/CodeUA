@@ -54,7 +54,7 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         """Обробник кнопок зміни гучності"""
 
         audio[0].volume = utils.clamp_value(audio[0].volume + value, 0, 1)
-        await storage.save("volume", audio[0].volume)
+        await storage.save("volume", APP_NAME, audio[0].volume)
         switcher.label = f"Рівень гучності: {int(audio[0].volume * 100)}%"
         switcher.update()
 
@@ -63,7 +63,7 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
 
         await _pause()
         page.session.store.set("track_name", switcher.value)
-        await storage.save("track_name", switcher.value)
+        await storage.save("track_name", APP_NAME, switcher.value)
         audio[0].src = playlist[switcher.value]
 
     async def _ui_update():
@@ -300,10 +300,10 @@ async def main(page: ft.Page):
                 f"{APP_NAME}.{name}"
             )
             if is_contains:
-                value = await storage.load(name)
+                value = await storage.load(name, APP_NAME)
             else:
                 value = default_value
-                await storage.save(name, value)
+                await storage.save(name, APP_NAME, value)
 
             page.session.store.set(name, value)
 

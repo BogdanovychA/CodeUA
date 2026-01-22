@@ -4,22 +4,20 @@ import json
 
 import flet as ft
 
-from utils.config import APP_NAME
 
-
-async def save(name: str, obj: object) -> None:
+async def save(name: str, app_name: str, obj: object) -> None:
     """Зберегти налаштування в кеш"""
 
-    name_obj = f"{APP_NAME}.{name}"
+    name_obj = f"{app_name}.{name}"
     obj_json = json.dumps(obj)
 
     await ft.SharedPreferences().set(name_obj, obj_json)
 
 
-async def load(name: str) -> object:
+async def load(name: str, app_name: str) -> object:
     """Зчитати налаштування з кешу"""
 
-    obj_json = await ft.SharedPreferences().get(f"{APP_NAME}.{name}")
+    obj_json = await ft.SharedPreferences().get(f"{app_name}.{name}")
     obj = json.loads(obj_json)
 
     return obj
