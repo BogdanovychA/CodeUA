@@ -3,9 +3,10 @@
 from datetime import time
 
 import flet as ft
+import flet_storage as fts
 
 from routes import about, author
-from utils import elements, storage
+from utils import elements
 from utils.config import (
     APP_NAME,
     BASE_URL,
@@ -27,7 +28,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
     async def _clear_cache() -> None:
         """Обробник кнопки очистки кешу"""
 
-        await storage.clear()
+        await fts.clear()
         await _reset()
 
     async def _reset() -> None:
@@ -39,7 +40,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
 
         # Скидання вкл/викл будильника
         page.session.store.set("alarm_on", True)
-        await storage.save("alarm_on", APP_NAME, True)
+        await fts.save("alarm_on", APP_NAME, True)
         alarm_on_selector.selected[0] = Bool.TRUE.value
         alarm_on_selector.update()
 
@@ -48,7 +49,7 @@ def build_view(page: ft.Page, audio) -> ft.View:
         alarm_block.update()
 
         # Скидання треку
-        await storage.save("track_name", APP_NAME, DEFAULT_TRACK)
+        await fts.save("track_name", APP_NAME, DEFAULT_TRACK)
         page.session.store.set("track_name", DEFAULT_TRACK)
         audio[0].src = playlist[DEFAULT_TRACK]
         await audio[0].pause()
@@ -56,13 +57,13 @@ def build_view(page: ft.Page, audio) -> ft.View:
 
         # Скидання гучності
         audio[0].volume = DEFAULT_VOLUME
-        await storage.save("volume", APP_NAME, DEFAULT_VOLUME)
+        await fts.save("volume", APP_NAME, DEFAULT_VOLUME)
 
     async def _set_alarm(new_alarm_time: dict) -> None:
         """Встановлення будильника"""
 
         page.session.store.set("alarm_time", new_alarm_time)
-        await storage.save("alarm_time", APP_NAME, new_alarm_time)
+        await fts.save("alarm_time", APP_NAME, new_alarm_time)
 
         alarm_block.value = (
             f"{new_alarm_time["hours"]:02}:{new_alarm_time["minutes"]:02}"
@@ -85,11 +86,11 @@ def build_view(page: ft.Page, audio) -> ft.View:
 
         if event.control.selected[0] == Bool.TRUE.value:
             page.session.store.set("alarm_on", True)
-            await storage.save("alarm_on", APP_NAME, True)
+            await fts.save("alarm_on", APP_NAME, True)
             alarm_block.style.color = ft.Colors.PRIMARY
         else:
             page.session.store.set("alarm_on", False)
-            await storage.save("alarm_on", APP_NAME, False)
+            await fts.save("alarm_on", APP_NAME, False)
             alarm_block.style.color = ft.Colors.ON_PRIMARY
 
         alarm_block.update()

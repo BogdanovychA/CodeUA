@@ -1,5 +1,6 @@
 flet>=0.80.2
 flet-audio>=0.80.2
+flet-storage==0.1.2
 httpx>=0.28.1
 pyinstaller>=6.17.0
 pre_commit>=4.4.0
