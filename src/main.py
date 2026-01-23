@@ -5,7 +5,7 @@ import uuid
 
 import flet as ft
 import flet_audio as fta
-import flet_storage as fts
+from flet_storage import FletStorage
 
 from routes import about, author, error404, root, settings
 from utils import elements
@@ -22,7 +22,9 @@ from utils.config import (
 from utils.models import Track
 
 
-def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
+def build_main_view(
+    page: ft.Page, audio: list[fta.Audio], storage: FletStorage
+) -> ft.View:
     """Головний екран застосунку"""
 
     async def _play():
@@ -55,7 +57,7 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
         """Обробник кнопок зміни гучності"""
 
         audio[0].volume = utils.clamp_value(audio[0].volume + value, 0, 1)
-        await fts.save("volume", APP_NAME, audio[0].volume)
+        await storage.set("volume", audio[0].volume)
         switcher.label = f"Рівень гучності: {int(audio[0].volume * 100)}%"
         switcher.update()
 
@@ -64,7 +66,7 @@ def build_main_view(page: ft.Page, audio: list[fta.Audio]) -> ft.View:
 
         await _pause()
         page.session.store.set("track_name", switcher.value)
-        await fts.save("track_name", APP_NAME, switcher.value)
+        await storage.set("track_name", switcher.value)
         audio[0].src = playlist[switcher.value]
 
     async def _ui_update():
@@ -214,10 +216,10 @@ async def main(page: ft.Page):
             _ui_update_task.cancel()
 
         page.views.clear()
-        page.views.append(build_main_view(page, audio))
+        page.views.append(build_main_view(page, audio, storage))
         match page.route:
             case settings.ROUTE:
-                page.views.append(settings.build_view(page, audio))
+                page.views.append(settings.build_view(page, audio, storage))
             case author.ROUTE:
                 page.views.append(author.build_view(page))
             case about.ROUTE:
@@ -297,15 +299,7 @@ async def main(page: ft.Page):
             """Допоміжна функція ініціалізації об'єктів,
             зчитування налаштувань з кешу"""
 
-            is_contains = await ft.SharedPreferences().contains_key(
-                f"{APP_NAME}.{name}"
-            )
-            if is_contains:
-                value = await fts.load(name, APP_NAME)
-            else:
-                value = default_value
-                await fts.save(name, APP_NAME, value)
-
+            value = await storage.get_or_default(name, default_value)
             page.session.store.set(name, value)
 
         await __init_obj("alarm_time", DEFAULT_ALARM_TIME.copy())
@@ -321,6 +315,8 @@ async def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
+
+    storage = FletStorage(APP_NAME)
 
     await _init()
 
