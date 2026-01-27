@@ -4,9 +4,7 @@ import logging
 
 import httpx
 
-from utils.secret import GA_SECRET_KEY
-
-GA_ID = "G-TFYK4KJW0Q"
+from utils.secret import GA_ID, GA_SECRET_KEY
 
 # DEBUG = True
 DEBUG = False
