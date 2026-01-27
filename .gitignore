@@ -4,7 +4,8 @@
 venv*/
 **/__pycache__/
 **/*.pyc
-build/
+build*/
+linux/
 android/
 src/temp/
 src/utils/secret.py
