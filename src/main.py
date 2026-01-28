@@ -168,7 +168,7 @@ def build_main_view(
             elements.app_bar(root.TITLE, page),
             ft.Text(""),
             ft.Image(
-                src="/icon.png",
+                src="/favicon.png",
                 width=200,
                 height=200,
             ),

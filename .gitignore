@@ -5,8 +5,7 @@ venv*/
 **/__pycache__/
 **/*.pyc
 build*/
-linux/
-android/
+bin/
 src/temp/
 src/utils/secret.py
 htmlcov/
