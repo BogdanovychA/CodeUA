@@ -34,7 +34,7 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text("CodeUA (код українця)", size=TEXT_SIZE),
             ft.Text(f"Версія {VERSION}"),
             ft.Image(
-                src="/images/foundation101-895x895.png",
+                src="/images/foundation101-512x512.jpg",
                 width=200,
                 height=200,
             ),
