@@ -32,7 +32,7 @@ def build_view(page: ft.Page) -> ft.View:
             elements.app_bar(TITLE, page),
             ft.Text(""),
             ft.Image(
-                src="/images/bogdanovych-950x950.jpg",
+                src="/images/bogdanovych-900x900.png",
                 width=200,
                 height=200,
             ),
