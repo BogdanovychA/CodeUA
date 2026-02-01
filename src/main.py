@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+import math
 import uuid
 
 import flet as ft
@@ -56,9 +57,10 @@ def build_main_view(
     async def _set_volume(value: float):
         """Обробник кнопок зміни гучності"""
 
-        audio[0].volume = utils.clamp_value(audio[0].volume + value, 0, 1)
-        await storage.set("volume", audio[0].volume)
-        switcher.label = f"Рівень гучності: {int(audio[0].volume * 100)}%"
+        new_volume = round(utils.clamp_value(audio[0].volume + value, 0, 1), 1)
+        audio[0].volume = new_volume
+        await storage.set("volume", new_volume)
+        switcher.label = f"Рівень гучності: {int(new_volume * 100)}%"
         switcher.update()
 
     async def _switch():
