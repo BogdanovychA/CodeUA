@@ -59,6 +59,7 @@ def build_main_view(
 
         new_volume = round(utils.clamp_value(audio[0].volume + value, 0, 1), 1)
         audio[0].volume = new_volume
+        audio[0].update()
         await storage.set("volume", new_volume)
         switcher.label = f"Рівень гучності: {int(new_volume * 100)}%"
         switcher.update()
