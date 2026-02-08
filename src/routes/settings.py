@@ -12,6 +12,7 @@ from utils import elements
 from utils.config import (
     BASE_URL,
     DEFAULT_ALARM_TIME,
+    DEFAULT_REPEAT,
     DEFAULT_TRACK,
     DEFAULT_VOLUME,
     TEXT_SIZE,
@@ -63,6 +64,10 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
         # Скидання гучності
         audio[0].volume = DEFAULT_VOLUME
         await storage.set("volume", DEFAULT_VOLUME)
+
+        # Скидання повтору треку
+        page.session.store.set("repeat", DEFAULT_REPEAT)
+        await storage.set("repeat", DEFAULT_REPEAT)
 
     async def _set_alarm(new_alarm_time: dict) -> None:
         """Встановлення будильника"""

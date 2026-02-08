@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-import math
 import uuid
 
 import flet as ft
@@ -15,6 +14,7 @@ from utils import utils
 from utils.config import (
     APP_NAME,
     DEFAULT_ALARM_TIME,
+    DEFAULT_REPEAT,
     DEFAULT_TRACK,
     DEFAULT_VOLUME,
     TEXT_SIZE,
@@ -51,8 +51,11 @@ def build_main_view(
 
         await audio[0].pause()
 
-    # async def _resume():
-    #     await audio[0].resume()
+    async def _repeat():
+        repeat = page.session.store.get("repeat")
+        repeat = False if repeat else True
+        page.session.store.set("repeat", repeat)
+        await storage.set("repeat", repeat)
 
     async def _set_volume(value: float):
         """Обробник кнопок зміни гучності"""
@@ -105,6 +108,17 @@ def build_main_view(
                         player_control[1] = play_button
                         controller.update()
 
+            repeat = page.session.store.get("repeat")
+
+            if repeat:
+                if repeat_button.icon != ft.Icons.REPEAT_ON:
+                    repeat_button.icon = ft.Icons.REPEAT_ON
+                    repeat_button.update()
+            else:
+                if repeat_button.icon != ft.Icons.REPEAT:
+                    repeat_button.icon = ft.Icons.REPEAT
+                    repeat_button.update()
+
             await asyncio.sleep(0.5)
 
     switcher = ft.Dropdown(
@@ -135,9 +149,9 @@ def build_main_view(
     )
 
     play_button = ft.IconButton(ft.Icons.PLAY_ARROW_ROUNDED, on_click=_play)
+    repeat_button = ft.IconButton(ft.Icons.REPEAT, on_click=_repeat)
     pause_button = ft.IconButton(ft.Icons.PAUSE_ROUNDED, on_click=_pause)
     stop_button = ft.IconButton(ft.Icons.STOP_ROUNDED, on_click=_stop)
-    # resume_button = ft.IconButton(ft.Icons.PLAY_CIRCLE_OUTLINED, on_click=_resume)
     volume_minus_button = ft.IconButton(
         ft.Icons.VOLUME_DOWN_ROUNDED,
         on_click=lambda _: asyncio.create_task(_set_volume(-0.1)),
@@ -150,6 +164,7 @@ def build_main_view(
     player_control = [
         volume_minus_button,
         play_button,
+        repeat_button,
         stop_button,
         volume_plus_button,
     ]
@@ -256,16 +271,16 @@ async def main(page: ft.Page):
 
             await asyncio.sleep(1)
 
-    def _state_change(event: fta.AudioStateChangeEvent | None):
+    async def _state_change(event: fta.AudioStateChangeEvent | None):
         """Обробник зміни статусу програвання мелодії"""
 
         page.session.store.set("audio_state", event.state)
-        # print(page.session.store.get("audio_state"))
 
-        # match event.state:
-        #     case fta.AudioState.COMPLETED:
-        #         # Якщо трек відіграв, перестворюємо об'єкт
-        #         audio[0] = _create_audio()
+        match event.state:
+            case fta.AudioState.COMPLETED:
+                if page.session.store.get("repeat"):
+                    await audio[0].play()
+
         #     case fta.AudioState.DISPOSED:
         #         # Перестворюємо об'єкт (для перестраховки :))
         #         audio[0] = _create_audio()
@@ -287,8 +302,8 @@ async def main(page: ft.Page):
             release_mode=fta.ReleaseMode.STOP,
             volume=page.session.store.get("volume"),
             balance=0,
-            # on_state_change=lambda e: asyncio.create_task(_state_change(e)),
-            on_state_change=lambda e: _state_change(e),
+            on_state_change=lambda e: asyncio.create_task(_state_change(e)),
+            # on_state_change=lambda e: _state_change(e),
             # on_loaded=lambda _: print("Loaded"),
             # on_duration_change=lambda e: print("Duration changed:", e.duration),
             # on_position_change=lambda e: print("Position changed:", e.position),
@@ -310,6 +325,7 @@ async def main(page: ft.Page):
         await __init_obj("alarm_on", True)
         await __init_obj("volume", DEFAULT_VOLUME)
         await __init_obj("client_id", str(uuid.uuid4()))
+        await __init_obj("repeat", DEFAULT_REPEAT)
 
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)
