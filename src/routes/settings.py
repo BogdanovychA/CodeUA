@@ -55,19 +55,19 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
         alarm_block.update()
 
         # Скидання треку
-        await storage.set("track_name", DEFAULT_TRACK)
-        page.session.store.set("track_name", DEFAULT_TRACK)
-        audio[0].src = playlist[DEFAULT_TRACK]
-        await audio[0].pause()
-        await audio[0].seek(ft.Duration(0))
+        # await storage.set("track_name", DEFAULT_TRACK)
+        # page.session.store.set("track_name", DEFAULT_TRACK)
+        # audio[0].src = playlist[DEFAULT_TRACK]
+        # await audio[0].pause()
+        # await audio[0].seek(ft.Duration(0))
 
         # Скидання гучності
-        audio[0].volume = DEFAULT_VOLUME
-        await storage.set("volume", DEFAULT_VOLUME)
+        # audio[0].volume = DEFAULT_VOLUME
+        # await storage.set("volume", DEFAULT_VOLUME)
 
         # Скидання повтору треку
-        page.session.store.set("repeat", DEFAULT_REPEAT)
-        await storage.set("repeat", DEFAULT_REPEAT)
+        # page.session.store.set("repeat", DEFAULT_REPEAT)
+        # await storage.set("repeat", DEFAULT_REPEAT)
 
     async def _set_alarm(new_alarm_time: dict) -> None:
         """Встановлення будильника"""

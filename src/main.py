@@ -79,12 +79,14 @@ def build_main_view(
         """Фоновий таск оновлення інтерфейсу"""
 
         while True:
+
             time_left = page.session.store.get("time_left")
             if timer.value != time_left:
                 timer.value = time_left
                 timer.update()
 
-            if page.session.store.get("alarm_on"):
+            alarm_on = page.session.store.get("alarm_on")
+            if alarm_on:
                 if timer.style.color != ft.Colors.PRIMARY:
                     timer.style.color = ft.Colors.PRIMARY
                     timer.update()
@@ -92,6 +94,16 @@ def build_main_view(
                 if timer.style.color != ft.Colors.ON_PRIMARY:
                     timer.style.color = ft.Colors.ON_PRIMARY
                     timer.update()
+
+            repeat = page.session.store.get("repeat")
+            if repeat:
+                if repeat_button.icon != ft.Icons.REPEAT_ON:
+                    repeat_button.icon = ft.Icons.REPEAT_ON
+                    repeat_button.update()
+            else:
+                if repeat_button.icon != ft.Icons.REPEAT:
+                    repeat_button.icon = ft.Icons.REPEAT
+                    repeat_button.update()
 
             audio_state = page.session.store.get("audio_state")
             match audio_state:
@@ -108,17 +120,7 @@ def build_main_view(
                         player_control[1] = play_button
                         controller.update()
 
-            repeat = page.session.store.get("repeat")
-
-            if repeat:
-                if repeat_button.icon != ft.Icons.REPEAT_ON:
-                    repeat_button.icon = ft.Icons.REPEAT_ON
-                    repeat_button.update()
-            else:
-                if repeat_button.icon != ft.Icons.REPEAT:
-                    repeat_button.icon = ft.Icons.REPEAT
-                    repeat_button.update()
-
+            page.update()
             await asyncio.sleep(0.5)
 
     switcher = ft.Dropdown(
