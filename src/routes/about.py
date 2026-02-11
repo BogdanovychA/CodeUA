@@ -4,10 +4,9 @@ import asyncio
 
 import flet as ft
 
-from routes import author
+from routes import author, root
 from utils import elements
 from utils.config import BASE_URL, TEXT_SIZE
-from routes import root
 
 TITLE = "Про застосунок"
 ROUTE = BASE_URL + "/about"
