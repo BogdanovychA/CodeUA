@@ -1,14 +1,21 @@
+# IDEs
 .idea/
 .vscode/
+# Virtual environments
 .venv*/
-venv*/
+# Python-generated files
 **/__pycache__/
 **/*.pyc
+*.py[oc]
+dist/
+wheels/
+*.egg-info
 build*/
+#
+src/utils/secret.py
 bin/
 src/temp/
-src/utils/secret.py
+# Tests
 htmlcov/
 .pytest_cache/
 .coverage
-*.egg-info/
