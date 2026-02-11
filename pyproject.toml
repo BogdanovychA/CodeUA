@@ -7,11 +7,22 @@ requires-python = "==3.14"
 authors = [
     { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
+
 dependencies = [
-  "flet==0.80.5",
-  "flet-audio==0.80.5",
-  "flet-storage==1.0.0",
-  "httpx==0.28.1",
+    "flet==0.80.5",
+    "flet-audio==0.80.5",
+    "flet-storage==1.0.0",
+    "httpx==0.28.1",
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli==0.80.5",
+    "flet-desktop-light==0.80.5",
+    "flet-web==0.80.5",
+    "pre_commit>=4.5.1",
+    "black>=26.1.0",
+    "isort>=7.0.0",
 ]
 
 [tool.flet]

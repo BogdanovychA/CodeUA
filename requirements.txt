@@ -1,8 +1,0 @@
-flet==0.80.5
-flet-audio==0.80.5
-flet-storage==1.0.0
-httpx==0.28.1
-pyinstaller>=6.17.0
-pre_commit>=4.4.0
-black>=25.11.0
-isort>=7.0.0
