@@ -2,5 +2,5 @@
 
 from utils.config import BASE_URL
 
-TITLE = "CodeUA (код українця)"
+TITLE = "CodeUA (Код українця)"
 ROUTE = BASE_URL + "/"

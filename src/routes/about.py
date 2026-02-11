@@ -7,10 +7,11 @@ import flet as ft
 from routes import author
 from utils import elements
 from utils.config import BASE_URL, TEXT_SIZE
+from routes import root
 
 TITLE = "Про застосунок"
 ROUTE = BASE_URL + "/about"
-VERSION = "1.0.9"
+VERSION = "1.1.0"
 
 
 def button(page) -> ft.Button:
@@ -31,7 +32,7 @@ def build_view(page: ft.Page) -> ft.View:
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE, page),
-            ft.Text("CodeUA (код українця)", size=TEXT_SIZE),
+            ft.Text(root.TITLE, size=TEXT_SIZE),
             ft.Text(f"Версія {VERSION}"),
             ft.Image(
                 src="/images/foundation101-512x512.jpg",
@@ -55,7 +56,7 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(
                 size=TEXT_SIZE,
                 spans=[
-                    elements.link("Веб-версія", "https://codeua.foundation101.org"),
+                    elements.link("Вебзастосунок", "https://codeua.foundation101.org"),
                     ft.TextSpan("\n"),
                     elements.link(
                         "Android (Google Play)",
