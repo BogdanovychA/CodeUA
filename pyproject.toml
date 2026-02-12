@@ -3,7 +3,7 @@ name = "codeua"
 version = "1.1.0"
 description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 authors = [
     { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
