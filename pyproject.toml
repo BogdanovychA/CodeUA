@@ -13,14 +13,14 @@ dependencies = [
     "flet-audio==0.80.5",
     "flet-storage==1.0.0",
     "httpx==0.28.1",
-    "flet-cli==0.80.5",     # Видалити при створенні apk/aab
-    "flet-web==0.80.5",     # Видалити при створенні apk/aab
-    "flet-desktop==0.80.5", # Видалити при створенні apk/aab
 ]
 
 [dependency-groups]
 dev = [
     "flet-desktop-light==0.80.5",
+    "flet-cli==0.80.5",     # Необіхдно для продакшену (веб)
+    "flet-web==0.80.5",     # Необіхдно для продакшену (веб)
+    "flet-desktop==0.80.5", # Необіхдно для продакшену (веб)
     "pre_commit>=4.5.1",
     "black>=26.1.0",
     "isort>=7.0.0",

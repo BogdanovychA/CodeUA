@@ -150,17 +150,17 @@ source = { editable = "." }
 dependencies = [
     { name = "flet" },
     { name = "flet-audio" },
-    { name = "flet-cli" },
-    { name = "flet-desktop" },
     { name = "flet-storage" },
-    { name = "flet-web" },
     { name = "httpx" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "black" },
+    { name = "flet-cli" },
+    { name = "flet-desktop" },
     { name = "flet-desktop-light" },
+    { name = "flet-web" },
     { name = "isort" },
     { name = "pre-commit" },
 ]
@@ -169,17 +169,17 @@ dev = [
 requires-dist = [
     { name = "flet", specifier = "==0.80.5" },
     { name = "flet-audio", specifier = "==0.80.5" },
-    { name = "flet-cli", specifier = "==0.80.5" },
-    { name = "flet-desktop", specifier = "==0.80.5" },
     { name = "flet-storage", specifier = "==1.0.0" },
-    { name = "flet-web", specifier = "==0.80.5" },
     { name = "httpx", specifier = "==0.28.1" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "black", specifier = ">=26.1.0" },
+    { name = "flet-cli", specifier = "==0.80.5" },
+    { name = "flet-desktop", specifier = "==0.80.5" },
     { name = "flet-desktop-light", specifier = "==0.80.5" },
+    { name = "flet-web", specifier = "==0.80.5" },
     { name = "isort", specifier = ">=7.0.0" },
     { name = "pre-commit", specifier = ">=4.5.1" },
 ]
