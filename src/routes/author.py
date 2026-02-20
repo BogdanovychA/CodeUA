@@ -27,6 +27,7 @@ def build_view(page: ft.Page) -> ft.View:
     page.title = TITLE
     return ft.View(
         route=ROUTE,
+        scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE, page),

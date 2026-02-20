@@ -183,6 +183,7 @@ def build_main_view(
 
     return ft.View(
         route=root.ROUTE,
+        scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(root.TITLE, page),
