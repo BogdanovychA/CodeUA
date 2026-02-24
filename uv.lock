@@ -169,19 +169,19 @@ dev = [
 requires-dist = [
     { name = "flet", specifier = "==0.80.5" },
     { name = "flet-audio", specifier = "==0.80.5" },
-    { name = "flet-storage", specifier = "==1.0.0" },
+    { name = "flet-storage", specifier = "==1.1.0" },
     { name = "httpx", specifier = "==0.28.1" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "black", specifier = ">=26.1.0" },
+    { name = "black", specifier = "==26.1.0" },
     { name = "flet-cli", specifier = "==0.80.5" },
     { name = "flet-desktop", specifier = "==0.80.5" },
     { name = "flet-desktop-light", specifier = "==0.80.5" },
     { name = "flet-web", specifier = "==0.80.5" },
-    { name = "isort", specifier = ">=8.0.0" },
-    { name = "pre-commit", specifier = ">=4.5.1" },
+    { name = "isort", specifier = "==8.0.0" },
+    { name = "pre-commit", specifier = "==4.5.1" },
 ]
 
 [[package]]
@@ -336,14 +336,14 @@ wheels = [
 
 [[package]]
 name = "flet-storage"
-version = "1.0.0"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "flet" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5d/0f/6e1cf53a8b2a4d9d8c8a41323efb08859a615e83048f0bfe80fe7ea65125/flet_storage-1.0.0.tar.gz", hash = "sha256:02b3186725f5f0ea6225a75d971778bf5f2640bf1a6a1408eff5dc04c508ef49", size = 5887, upload-time = "2026-01-23T10:48:24.576Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/45/815b512b114f3d1f3b4fc363fb7f0b9f8085d35dada8d2b8d408577d9dcc/flet_storage-1.1.0.tar.gz", hash = "sha256:127e929aeae513fecffb2c96337b23db372d97292131ba470edbd23a1650c286", size = 7266, upload-time = "2026-02-24T10:43:35.43Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/01/ac/26ff694a53ef6f5acaca27b93dcc6c0873a77e213e67fa50b368309cc901/flet_storage-1.0.0-py3-none-any.whl", hash = "sha256:5b37657ccc806bfbea4a672bf9a9a42adcd223e6899d1cb4e5c81350c21eab1c", size = 6374, upload-time = "2026-01-23T10:48:23.474Z" },
+    { url = "https://files.pythonhosted.org/packages/dd/f0/801b6387c736ca56d43c51ad261720dd3b84dc1464f9d7d6d2fab5b455b3/flet_storage-1.1.0-py3-none-any.whl", hash = "sha256:8f8e3f0df09c3cfcaf12e347b3bfe89c95dc0178f9f40720d3f0b2f59e9214e8", size = 7637, upload-time = "2026-02-24T10:43:34.28Z" },
 ]
 
 [[package]]
