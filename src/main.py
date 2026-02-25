@@ -128,11 +128,9 @@ def build_main_view(
         label_style=ft.TextStyle(size=TEXT_SIZE),
         value=page.session.store.get("track_name"),
         options=[
-            ft.DropdownOption(key=Track.MOMENT.value, text="Хвилина мовчання"),
-            ft.DropdownOption(key=Track.ANTHEM.value, text="Гімн України (варіант 1)"),
-            ft.DropdownOption(
-                key=Track.ANTHEM_2.value, text="Гімн України (варіант 2)"
-            ),
+            ft.DropdownOption(key=Track.MOMENT, text="Хвилина мовчання"),
+            ft.DropdownOption(key=Track.ANTHEM, text="Гімн України (варіант 1)"),
+            ft.DropdownOption(key=Track.ANTHEM_2, text="Гімн України (варіант 2)"),
         ],
         on_select=_switch,
     )

@@ -47,7 +47,7 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
         # Скидання вкл/викл будильника
         page.session.store.set("alarm_on", True)
         await storage.set("alarm_on", True)
-        alarm_on_selector.selected[0] = Bool.TRUE.value
+        alarm_on_selector.selected[0] = Bool.TRUE
         alarm_on_selector.update()
 
         # Скидання кольору будильника
@@ -94,7 +94,7 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
     async def _switch(event: ft.Event) -> None:
         """Обробник перемикача вкл/викл будильника"""
 
-        if event.control.selected[0] == Bool.TRUE.value:
+        if event.control.selected[0] == Bool.TRUE:
             page.session.store.set("alarm_on", True)
             await storage.set("alarm_on", True)
             alarm_block.style.color = ft.Colors.PRIMARY
@@ -132,21 +132,19 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
     )
 
     alarm_on_selector = ft.SegmentedButton(
-        selected=[
-            Bool.TRUE.value if page.session.store.get("alarm_on") else Bool.FALSE.value
-        ],
+        selected=[Bool.TRUE if page.session.store.get("alarm_on") else Bool.FALSE],
         allow_empty_selection=False,
         allow_multiple_selection=False,
         show_selected_icon=False,
         segments=[
             ft.Segment(
-                value=Bool.TRUE.value,
-                # label=ft.Text(Bool.TRUE.value),
+                value=Bool.TRUE,
+                # label=ft.Text(Bool.TRUE),
                 icon=ft.Icons.NOTIFICATIONS_ACTIVE_ROUNDED,
             ),
             ft.Segment(
-                value=Bool.FALSE.value,
-                # label=ft.Text(Bool.FALSE.value),
+                value=Bool.FALSE,
+                # label=ft.Text(Bool.FALSE),
                 icon=ft.Icons.NOTIFICATIONS_OFF_ROUNDED,
             ),
         ],

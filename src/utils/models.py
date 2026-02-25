@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from enum import Enum
+from enum import StrEnum
 
 
-class Track(Enum):
+class Track(StrEnum):
     """Назви треків"""
 
     MOMENT = "moment"
@@ -11,7 +11,7 @@ class Track(Enum):
     ANTHEM_2 = "anthem_2"
 
 
-class Bool(Enum):
+class Bool(StrEnum):
     """Текстове представлення True/False"""
 
     TRUE = "true"

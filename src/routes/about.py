@@ -10,7 +10,7 @@ from utils.config import BASE_URL, TEXT_SIZE
 
 TITLE = "Про застосунок"
 ROUTE = BASE_URL + "/about"
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 
 
 def button(page) -> ft.Button:
