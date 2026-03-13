@@ -1,0 +1,1 @@
+test-message = { $tasks_count ->\n    [0]     Witaj, { $user_name }! Nie masz żadnych zadań.\n    [one]   Witaj, { $user_name }! Masz { $tasks_count } zadanie.\n   *[other] Witaj, { $user_name }! Masz { $tasks_count } zadań.\n}

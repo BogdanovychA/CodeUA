@@ -1,0 +1,1 @@
+elements-common-back = Wstecz
