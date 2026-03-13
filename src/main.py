@@ -13,11 +13,15 @@ from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils import utils
+from utils.locale_manager import LocaleManager
 from utils.models import Track
 
 
 def build_main_view(
-    page: ft.Page, audio: list[fta.Audio], storage: FletStorage
+    page: ft.Page,
+    audio: list[fta.Audio],
+    storage: FletStorage,
+    lang: list[LocaleManager],
 ) -> ft.View:
     """Головний екран застосунку"""
 
@@ -57,7 +61,7 @@ def build_main_view(
         audio[0].volume = new_volume
         audio[0].update()
         await storage.set("volume", new_volume)
-        switcher.label = f"Рівень гучності: {int(new_volume * 100)}%"
+        switcher.label = lang[0].get("volume-label", volume=int(new_volume * 100))
         switcher.update()
 
     async def _switch():
@@ -117,13 +121,13 @@ def build_main_view(
             await asyncio.sleep(0.5)
 
     switcher = ft.Dropdown(
-        label=f"Рівень гучності: {int(audio[0].volume * 100)}%",
+        label=lang[0].get("volume-label", volume=int(audio[0].volume * 100)),
         label_style=ft.TextStyle(size=style.settings.text_size),
         value=page.session.store.get("track_name"),
         options=[
-            ft.DropdownOption(key=Track.MOMENT, text="Хвилина мовчання"),
-            ft.DropdownOption(key=Track.ANTHEM, text="Гімн України (варіант 1)"),
-            ft.DropdownOption(key=Track.ANTHEM_2, text="Гімн України (варіант 2)"),
+            ft.DropdownOption(key=Track.MOMENT, text=lang[0].get("track-silence")),
+            ft.DropdownOption(key=Track.ANTHEM, text=lang[0].get("track-anthem-1")),
+            ft.DropdownOption(key=Track.ANTHEM_2, text=lang[0].get("track-anthem-2")),
         ],
         on_select=_switch,
     )
@@ -186,7 +190,7 @@ def build_main_view(
             ),
             ft.Text(""),
             ft.Text(
-                "До вшанування пам'яті загиблих\nГероїв України залишилося:",
+                lang[0].get("memory-title"),
                 size=style.settings.text_size,
             ),
             timer,
@@ -228,7 +232,7 @@ async def main(page: ft.Page):
             _ui_update_task.cancel()
 
         page.views.clear()
-        page.views.append(build_main_view(page, audio, storage))
+        page.views.append(build_main_view(page, audio, storage, lang))
         match page.route:
             case settings.ROUTE:
                 page.views.append(settings.build_view(page, audio, storage))
@@ -336,6 +340,7 @@ async def main(page: ft.Page):
     # Об'єкт вкладаємо в єдиний елемент списку, щоб мати можливість
     # його перестворювати, не змінюючи посилання на об'єкт
     audio = [_create_audio()]
+    lang = [LocaleManager("uk")]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:

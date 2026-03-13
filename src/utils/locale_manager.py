@@ -22,12 +22,17 @@ class LocaleManager:
             [self.locale, self.default_locale], [*self.resource_ids], self.loader
         )
 
+    @classmethod
+    def create_manager(cls, locale: str):
+        return cls(locale)
+
     def get(self, key, **kwargs) -> str:
         return self.l10n.format_value(key, kwargs)
 
 
 if __name__ == "__main__":
-    lang_manager = LocaleManager("en")
+
+    lang_manager = LocaleManager.create_manager("en")
     test_msg = lang_manager.get(
         "test-message",
         user_name="Andrii",
