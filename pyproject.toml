@@ -12,7 +12,10 @@ dependencies = [
     "flet==0.82.2",
     "flet-audio==0.82.2",
     "flet-storage==1.1.1",
+    "fluent-runtime==0.4.0",
     "httpx==0.28.1",
+    "pydantic-settings==2.13.1",
+    "pydentic==0.0.1.dev3",
 ]
 
 [dependency-groups]
