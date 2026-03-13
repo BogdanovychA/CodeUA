@@ -175,7 +175,7 @@ def build_main_view(
         alignment=ft.MainAxisAlignment.CENTER,
     )
 
-    page.title = root.TITLE
+    page.title = lang[0].get("main-title")
 
     _ui_update_task = page.run_task(_ui_update)
     page.session.store.set("_ui_update_task", _ui_update_task)
@@ -185,7 +185,7 @@ def build_main_view(
         scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(root.TITLE, page),
+            elements.app_bar(lang[0].get("main-title"), page),
             ft.Text(""),
             ft.Image(
                 src="/favicon.png",
@@ -215,10 +215,6 @@ def build_main_view(
 
 async def main(page: ft.Page):
     """Головна функція запуску застосунку"""
-
-    page.title = root.TITLE
-    page.theme_mode = ft.ThemeMode.DARK
-    page.route = root.ROUTE
 
     async def route_change():
         """Обробник перемикання екранів"""
@@ -296,7 +292,7 @@ async def main(page: ft.Page):
         #         pass
 
     def _create_audio() -> fta.Audio:
-        """Створення об'єкту плеера"""
+        """Створення об'єкта плеєра"""
 
         return fta.Audio(
             src=playlist[page.session.store.get("track_name")],
@@ -350,6 +346,10 @@ async def main(page: ft.Page):
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:
         page.run_task(_check_time)
+
+    page.title = lang[0].get("main-title")
+    page.theme_mode = ft.ThemeMode.DARK
+    page.route = root.ROUTE
 
     await route_change()
 

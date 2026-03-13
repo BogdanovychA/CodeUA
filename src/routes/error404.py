@@ -28,6 +28,6 @@ def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
             ft.Text(title, size=style.settings.text_size),
             ft.Text(lang[0].get("error404-target-page", route=page.route)),
             ft.Text(""),
-            elements.back_button(page),
+            elements.back_button(page, lang),
         ],
     )

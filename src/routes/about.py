@@ -72,6 +72,6 @@ def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
             ),
             ft.Text(""),
             author.button(page),
-            elements.back_button(page),
+            elements.back_button(page, lang),
         ],
     )

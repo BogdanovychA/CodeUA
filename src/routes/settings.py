@@ -188,6 +188,6 @@ def build_view(
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
-            elements.back_button(page),
+            elements.back_button(page, lang),
         ],
     )

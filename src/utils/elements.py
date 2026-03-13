@@ -8,11 +8,11 @@ from config import style
 from routes import root
 
 
-def back_button(page) -> ft.Button:
+def back_button(page, lang) -> ft.Button:
     """Кнопка 'назад'"""
 
     return ft.Button(
-        "Назад",
+        lang[0].get("elements-common-back"),
         icon=ft.Icons.ARROW_BACK,
         on_click=lambda: asyncio.create_task(page.push_route(root.ROUTE)),
     )
