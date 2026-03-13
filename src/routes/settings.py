@@ -16,11 +16,18 @@ if TYPE_CHECKING:
     import flet_audio as fta
     from flet_storage import FletStorage
 
+    from utils.locale_manager import LocaleManager
+
 TITLE = "Налаштування"
 ROUTE = app.settings.base_url + "/settings"
 
 
-def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> ft.View:
+def build_view(
+    page: ft.Page,
+    audio: list[fta.Audio],
+    storage: FletStorage,
+    lang: list[LocaleManager],
+) -> ft.View:
     """Екран налаштувань"""
 
     async def _clear_cache() -> None:

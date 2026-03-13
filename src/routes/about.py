@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from utils.locale_manager import LocaleManager
 import asyncio
 
 import flet as ft
@@ -21,7 +26,7 @@ def button(page) -> ft.Button:
     )
 
 
-def build_view(page: ft.Page) -> ft.View:
+def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
     """Екран про автора"""
 
     page.title = TITLE

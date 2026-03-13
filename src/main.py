@@ -61,7 +61,7 @@ def build_main_view(
         audio[0].volume = new_volume
         audio[0].update()
         await storage.set("volume", new_volume)
-        switcher.label = lang[0].get("volume-label", volume=int(new_volume * 100))
+        switcher.label = lang[0].get("main-volume-label", volume=int(new_volume * 100))
         switcher.update()
 
     async def _switch():
@@ -121,13 +121,17 @@ def build_main_view(
             await asyncio.sleep(0.5)
 
     switcher = ft.Dropdown(
-        label=lang[0].get("volume-label", volume=int(audio[0].volume * 100)),
+        label=lang[0].get("main-volume-label", volume=int(audio[0].volume * 100)),
         label_style=ft.TextStyle(size=style.settings.text_size),
         value=page.session.store.get("track_name"),
         options=[
-            ft.DropdownOption(key=Track.MOMENT, text=lang[0].get("track-silence")),
-            ft.DropdownOption(key=Track.ANTHEM, text=lang[0].get("track-anthem-1")),
-            ft.DropdownOption(key=Track.ANTHEM_2, text=lang[0].get("track-anthem-2")),
+            ft.DropdownOption(key=Track.MOMENT, text=lang[0].get("main-track-silence")),
+            ft.DropdownOption(
+                key=Track.ANTHEM, text=lang[0].get("main-track-anthem-1")
+            ),
+            ft.DropdownOption(
+                key=Track.ANTHEM_2, text=lang[0].get("main-track-anthem-2")
+            ),
         ],
         on_select=_switch,
     )
@@ -190,7 +194,7 @@ def build_main_view(
             ),
             ft.Text(""),
             ft.Text(
-                lang[0].get("memory-title"),
+                lang[0].get("main-memory-title"),
                 size=style.settings.text_size,
             ),
             timer,
@@ -235,14 +239,14 @@ async def main(page: ft.Page):
         page.views.append(build_main_view(page, audio, storage, lang))
         match page.route:
             case settings.ROUTE:
-                page.views.append(settings.build_view(page, audio, storage))
+                page.views.append(settings.build_view(page, audio, storage, lang))
             case author.ROUTE:
-                page.views.append(author.build_view(page))
+                page.views.append(author.build_view(page, lang))
             case about.ROUTE:
-                page.views.append(about.build_view(page))
+                page.views.append(about.build_view(page, lang))
             case _:
                 if page.route != root.ROUTE:
-                    page.views.append(error404.build_view(page))
+                    page.views.append(error404.build_view(page, lang))
 
         page.update()
 
@@ -341,6 +345,7 @@ async def main(page: ft.Page):
     # його перестворювати, не змінюючи посилання на об'єкт
     audio = [_create_audio()]
     lang = [LocaleManager("uk")]
+    # lang = [LocaleManager("en")]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:
