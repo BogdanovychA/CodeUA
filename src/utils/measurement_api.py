@@ -6,10 +6,6 @@ import httpx
 
 from config import google_analytics as ga
 
-# DEBUG = True
-DEBUG = False
-
-
 logger = logging.getLogger(__name__)
 if not logger.handlers:
     handler = logging.StreamHandler()
@@ -17,7 +13,7 @@ if not logger.handlers:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
-if DEBUG:
+if ga.settings.debug:
     logger.setLevel(logging.DEBUG)
 else:
     logger.setLevel(logging.INFO)
@@ -28,7 +24,7 @@ async def log_event(
 ) -> bool:
     """Логує подію"""
 
-    suffix = "debug/" if DEBUG else ""
+    suffix = "debug/" if ga.settings.debug else ""
     url = (
         f"https://www.google-analytics.com/{suffix}mp/collect?"
         f"measurement_id={ga.settings.id}&api_secret={ga.settings.secret_key}"
@@ -51,7 +47,7 @@ async def log_event(
         async with httpx.AsyncClient() as client:
             response = await client.post(url, json=payload, timeout=5.0)
 
-            if DEBUG:
+            if ga.settings.debug:
                 if response.status_code != 200:
                     logger.warning(
                         f"GA debug unexpected status: {response.status_code}"
