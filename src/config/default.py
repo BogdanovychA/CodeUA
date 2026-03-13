@@ -15,6 +15,7 @@ class Settings(BaseModel):
     track: Track = Track.MOMENT
     volume: float = 0.5
     repeat: bool = False
+    locale: str = "uk"
 
 
 settings = Settings()
