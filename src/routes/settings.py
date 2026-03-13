@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
     from utils.locale_manager import LocaleManager
 
-TITLE = "Налаштування"
 ROUTE = app.settings.base_url + "/settings"
 
 
@@ -122,9 +121,9 @@ def build_view(
 
     time_picker = ft.TimePicker(
         value=time(hour=hours, minute=minutes, second=seconds),
-        confirm_text="Підтвердити",
-        error_invalid_text="Не коректний час",
-        help_text="Встанови час",
+        confirm_text=lang[0].get("settings-time-picker-confirm"),
+        error_invalid_text=lang[0].get("settings-time-picker-error"),
+        help_text=lang[0].get("settings-time-picker-help"),
         entry_mode=ft.TimePickerEntryMode.DIAL,
         hour_format=ft.TimePickerHourFormat.H24,
         on_change=_change,
@@ -150,22 +149,26 @@ def build_view(
         on_change=_switch,
     )
 
+    page.title = lang[0].get("settings-title")
+
     return ft.View(
         route=ROUTE,
         scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(TITLE, page),
+            elements.app_bar(lang[0].get("settings-title"), page),
             ft.Text(""),
-            ft.Text(TITLE, size=style.settings.text_size),
+            ft.Text(lang[0].get("settings-title"), size=style.settings.text_size),
             ft.Text(""),
             alarm_on_selector,
-            ft.Text("Час запуску:", size=style.settings.text_size),
+            ft.Text(
+                lang[0].get("settings-alarm-time-label"), size=style.settings.text_size
+            ),
             alarm_block,
             ft.Row(
                 controls=[
                     ft.Button(
-                        content="Встановити",
+                        content=lang[0].get("settings-set-time"),
                         on_click=lambda: page.show_dialog(time_picker),
                     ),
                     ft.IconButton(

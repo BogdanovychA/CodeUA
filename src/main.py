@@ -340,8 +340,11 @@ async def main(page: ft.Page):
     # Об'єкт вкладаємо в єдиний елемент списку, щоб мати можливість
     # його перестворювати, не змінюючи посилання на об'єкт
     audio = [_create_audio()]
+
+    lang = [LocaleManager(default.settings.locale)]
+
     # lang = [LocaleManager("uk")]
-    lang = [LocaleManager("en")]
+    # lang = [LocaleManager("en")]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:
