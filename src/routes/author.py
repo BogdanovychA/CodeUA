@@ -4,10 +4,9 @@ import asyncio
 
 import flet as ft
 
-from config import app
+from config import app, style
 from routes import about
 from utils import elements
-from utils.config import TEXT_SIZE
 
 TITLE = "Про автора"
 ROUTE = app.settings.base_url + "/author"
@@ -39,9 +38,9 @@ def build_view(page: ft.Page) -> ft.View:
                 height=200,
             ),
             ft.Text(""),
-            ft.Text("Андрій БОГДАНОВИЧ", size=TEXT_SIZE),
+            ft.Text("Андрій БОГДАНОВИЧ", size=style.settings.text_size),
             ft.Text(
-                size=TEXT_SIZE,
+                size=style.settings.text_size,
                 spans=[
                     elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
                     ft.TextSpan("\n"),

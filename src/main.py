@@ -7,13 +7,12 @@ import flet as ft
 import flet_audio as fta
 from flet_storage import FletStorage
 
-from config import app, defaults
+from config import app, defaults, style
 from config.sound import playlist
 from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils import utils
-from utils.config import TEXT_SIZE
 from utils.models import Track
 
 
@@ -119,7 +118,7 @@ def build_main_view(
 
     switcher = ft.Dropdown(
         label=f"Рівень гучності: {int(audio[0].volume * 100)}%",
-        label_style=ft.TextStyle(size=TEXT_SIZE),
+        label_style=ft.TextStyle(size=style.settings.text_size),
         value=page.session.store.get("track_name"),
         options=[
             ft.DropdownOption(key=Track.MOMENT, text="Хвилина мовчання"),
@@ -131,7 +130,7 @@ def build_main_view(
 
     timer = ft.Text(
         "",
-        size=TEXT_SIZE,
+        size=style.settings.text_size,
         style=ft.TextStyle(
             color=(
                 ft.Colors.PRIMARY
@@ -188,7 +187,7 @@ def build_main_view(
             ft.Text(""),
             ft.Text(
                 "До вшанування пам'яті загиблих\nГероїв України залишилося:",
-                size=TEXT_SIZE,
+                size=style.settings.text_size,
             ),
             timer,
             ft.Text(""),

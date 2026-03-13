@@ -2,9 +2,8 @@
 
 import flet as ft
 
-from config import app
+from config import app, style
 from utils import elements
-from utils.config import TEXT_SIZE
 
 TITLE = "Сторінка не знайдена"
 ROUTE = app.settings.base_url + "/404"
@@ -20,7 +19,7 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(""),
-            ft.Text(TITLE, size=TEXT_SIZE),
+            ft.Text(TITLE, size=style.settings.text_size),
             ft.Text(f"Цільова сторінка: {page.route}"),
             ft.Text(""),
             elements.back_button(page),

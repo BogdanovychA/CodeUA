@@ -4,10 +4,9 @@ import asyncio
 
 import flet as ft
 
-from config import app
+from config import app, style
 from routes import author, root
 from utils import elements
-from utils.config import TEXT_SIZE
 
 TITLE = "Про застосунок"
 ROUTE = app.settings.base_url + "/about"
@@ -32,7 +31,7 @@ def build_view(page: ft.Page) -> ft.View:
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE, page),
-            ft.Text(root.TITLE, size=TEXT_SIZE),
+            ft.Text(root.TITLE, size=style.settings.text_size),
             ft.Text(f"Версія {app.settings.version}"),
             ft.Image(
                 src="/images/foundation101-512x512.jpg",
@@ -42,10 +41,10 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Text(
                 "Створено за підтримки\nГО «Фундація.101»",
-                size=TEXT_SIZE,
+                size=style.settings.text_size,
             ),
             ft.Text(
-                size=TEXT_SIZE,
+                size=style.settings.text_size,
                 spans=[
                     elements.link(
                         "Підтримати проєкт", "https://send.monobank.ua/jar/8Qn1woNnC7"
@@ -54,7 +53,7 @@ def build_view(page: ft.Page) -> ft.View:
             ),
             ft.Text(""),
             ft.Text(
-                size=TEXT_SIZE,
+                size=style.settings.text_size,
                 spans=[
                     elements.link("Вебзастосунок", "https://codeua.foundation101.org"),
                     ft.TextSpan("\n"),

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from utils.models import Track
 
 
-class BotSettings(BaseModel):
+class Settings(BaseModel):
     alarm_time: dict[str, int] = {
         "hours": 9,
         "minutes": 0,
@@ -17,4 +17,4 @@ class BotSettings(BaseModel):
     repeat: bool = False
 
 
-settings = BotSettings()
+settings = Settings()

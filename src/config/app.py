@@ -5,7 +5,7 @@ from pathlib import Path
 from pydantic import BaseModel
 
 
-class BotSettings(BaseModel):
+class Settings(BaseModel):
 
     name: str = "CodeUA"
     version: str = "1.1.4"
@@ -14,4 +14,4 @@ class BotSettings(BaseModel):
     base_dir: Path = Path(__file__).resolve().parent.parent.parent
 
 
-settings = BotSettings()
+settings = Settings()

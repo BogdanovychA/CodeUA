@@ -7,10 +7,9 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from config import app, defaults
+from config import app, defaults, style
 from routes import about, author
 from utils import elements
-from utils.config import TEXT_SIZE
 from utils.models import Bool
 
 if TYPE_CHECKING:
@@ -111,7 +110,7 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
             ),
             weight=ft.FontWeight.BOLD,
         ),
-        size=TEXT_SIZE,
+        size=style.settings.text_size,
     )
 
     time_picker = ft.TimePicker(
@@ -151,10 +150,10 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(""),
-            ft.Text(TITLE, size=TEXT_SIZE),
+            ft.Text(TITLE, size=style.settings.text_size),
             ft.Text(""),
             alarm_on_selector,
-            ft.Text("Час запуску:", size=TEXT_SIZE),
+            ft.Text("Час запуску:", size=style.settings.text_size),
             alarm_block,
             ft.Row(
                 controls=[
