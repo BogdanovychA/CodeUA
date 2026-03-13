@@ -19,7 +19,7 @@ TITLE = "Про автора"
 ROUTE = app.settings.base_url + "/author"
 
 
-def button(page) -> ft.Button:
+def button(page, lang: list[LocaleManager]) -> ft.Button:
     "Кнопка екрану про автора"
 
     return ft.Button(
@@ -55,7 +55,7 @@ def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
                 ],
             ),
             ft.Text(""),
-            about.button(page),
+            about.button(page, lang),
             elements.back_button(page, lang),
         ],
     )

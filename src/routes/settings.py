@@ -183,8 +183,8 @@ def build_view(
             ft.Text(""),
             ft.Row(
                 controls=[
-                    author.button(page),
-                    about.button(page),
+                    author.button(page, lang),
+                    about.button(page, lang),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),

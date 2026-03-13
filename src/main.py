@@ -204,8 +204,8 @@ def build_main_view(
             ft.Text(""),
             ft.Row(
                 controls=[
-                    author.button(page),
-                    about.button(page),
+                    author.button(page, lang),
+                    about.button(page, lang),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
@@ -340,14 +340,15 @@ async def main(page: ft.Page):
     # Об'єкт вкладаємо в єдиний елемент списку, щоб мати можливість
     # його перестворювати, не змінюючи посилання на об'єкт
     audio = [_create_audio()]
-    lang = [LocaleManager("uk")]
-    # lang = [LocaleManager("en")]
+    # lang = [LocaleManager("uk")]
+    lang = [LocaleManager("en")]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:
         page.run_task(_check_time)
 
     page.title = lang[0].get("main-title")
+
     page.theme_mode = ft.ThemeMode.DARK
     page.route = root.ROUTE
 
