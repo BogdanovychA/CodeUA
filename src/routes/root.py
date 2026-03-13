@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from utils.config import BASE_URL
+from config import app
 
 TITLE = "CodeUA (Код українця)"
-ROUTE = BASE_URL + "/"
+ROUTE = app.settings.base_url + "/"

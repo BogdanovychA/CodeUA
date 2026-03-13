@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
+from config import app
 from routes import about, author
 from utils import elements
 from utils.config import (
-    BASE_URL,
     DEFAULT_ALARM_TIME,
     DEFAULT_REPEAT,
     DEFAULT_TRACK,
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from flet_storage import FletStorage
 
 TITLE = "Налаштування"
-ROUTE = BASE_URL + "/settings"
+ROUTE = app.settings.base_url + "/settings"
 
 
 def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> ft.View:

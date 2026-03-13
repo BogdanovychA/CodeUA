@@ -7,12 +7,12 @@ import flet as ft
 import flet_audio as fta
 from flet_storage import FletStorage
 
+from config import app
 from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils import utils
 from utils.config import (
-    APP_NAME,
     DEFAULT_ALARM_TIME,
     DEFAULT_REPEAT,
     DEFAULT_TRACK,
@@ -336,7 +336,7 @@ async def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    storage = FletStorage(APP_NAME)
+    storage = FletStorage(app.settings.name)
 
     await _init()
 
@@ -352,4 +352,4 @@ async def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, assets_dir="assets")
+    ft.run(main, assets_dir=app.settings.base_dir / "src" / "assets")

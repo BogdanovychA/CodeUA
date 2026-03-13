@@ -2,11 +2,12 @@
 
 import flet as ft
 
+from config import app
 from utils import elements
-from utils.config import BASE_URL, TEXT_SIZE
+from utils.config import TEXT_SIZE
 
 TITLE = "Сторінка не знайдена"
-ROUTE = BASE_URL + "/404"
+ROUTE = app.settings.base_url + "/404"
 
 
 def build_view(page: ft.Page) -> ft.View:

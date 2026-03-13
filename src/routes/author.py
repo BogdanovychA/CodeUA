@@ -4,12 +4,13 @@ import asyncio
 
 import flet as ft
 
+from config import app
 from routes import about
 from utils import elements
-from utils.config import BASE_URL, TEXT_SIZE
+from utils.config import TEXT_SIZE
 
 TITLE = "Про автора"
-ROUTE = BASE_URL + "/author"
+ROUTE = app.settings.base_url + "/author"
 
 
 def button(page) -> ft.Button:

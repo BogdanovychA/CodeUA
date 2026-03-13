@@ -4,13 +4,13 @@ import asyncio
 
 import flet as ft
 
+from config import app
 from routes import author, root
 from utils import elements
-from utils.config import BASE_URL, TEXT_SIZE
+from utils.config import TEXT_SIZE
 
 TITLE = "Про застосунок"
-ROUTE = BASE_URL + "/about"
-VERSION = "1.1.3"
+ROUTE = app.settings.base_url + "/about"
 
 
 def button(page) -> ft.Button:
@@ -33,7 +33,7 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(root.TITLE, size=TEXT_SIZE),
-            ft.Text(f"Версія {VERSION}"),
+            ft.Text(f"Версія {app.settings.version}"),
             ft.Image(
                 src="/images/foundation101-512x512.jpg",
                 width=200,

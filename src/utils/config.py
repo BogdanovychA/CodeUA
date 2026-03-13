@@ -4,9 +4,6 @@ import flet as ft
 
 from utils.models import Track
 
-APP_NAME = "CodeUA"
-BASE_URL = ""
-
 TITLE_SIZE = 24
 TEXT_SIZE = 20
 
