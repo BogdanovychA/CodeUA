@@ -7,17 +7,10 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from config import app
+from config import app, defaults
 from routes import about, author
 from utils import elements
-from utils.config import (
-    DEFAULT_ALARM_TIME,
-    DEFAULT_REPEAT,
-    DEFAULT_TRACK,
-    DEFAULT_VOLUME,
-    TEXT_SIZE,
-    playlist,
-)
+from utils.config import TEXT_SIZE
 from utils.models import Bool
 
 if TYPE_CHECKING:
@@ -41,7 +34,7 @@ def build_view(page: ft.Page, audio: list[fta.Audio], storage: FletStorage) -> f
         """Обробник кнопки скидання налаштувань"""
 
         # Скидання часу будильника
-        new_alarm_time = DEFAULT_ALARM_TIME.copy()
+        new_alarm_time = defaults.settings.alarm_time.copy()
         await _set_alarm(new_alarm_time)
 
         # Скидання вкл/викл будильника

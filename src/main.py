@@ -7,19 +7,13 @@ import flet as ft
 import flet_audio as fta
 from flet_storage import FletStorage
 
-from config import app
+from config import app, defaults
+from config.sound import playlist
 from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils import utils
-from utils.config import (
-    DEFAULT_ALARM_TIME,
-    DEFAULT_REPEAT,
-    DEFAULT_TRACK,
-    DEFAULT_VOLUME,
-    TEXT_SIZE,
-    playlist,
-)
+from utils.config import TEXT_SIZE
 from utils.models import Track
 
 
@@ -321,12 +315,12 @@ async def main(page: ft.Page):
             value = await storage.get_or_default(name, default_value)
             page.session.store.set(name, value)
 
-        await __init_obj("alarm_time", DEFAULT_ALARM_TIME.copy())
-        await __init_obj("track_name", DEFAULT_TRACK)
+        await __init_obj("alarm_time", defaults.settings.alarm_time.copy())
+        await __init_obj("track_name", defaults.settings.track)
         await __init_obj("alarm_on", True)
-        await __init_obj("volume", DEFAULT_VOLUME)
+        await __init_obj("volume", defaults.settings.volume)
         await __init_obj("client_id", str(uuid.uuid4()))
-        await __init_obj("repeat", DEFAULT_REPEAT)
+        await __init_obj("repeat", defaults.settings.repeat)
 
         page.session.store.set("time_left", "23:59:59")
         page.session.store.set("_ui_update_task", None)
