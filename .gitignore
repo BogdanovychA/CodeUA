@@ -23,6 +23,5 @@ htmlcov/
 .coverage
 
 # Project
-src/utils/secret.py
 bin/
 src/temp/

@@ -4,7 +4,7 @@ import logging
 
 import httpx
 
-from utils.secret import GA_ID, GA_SECRET_KEY
+from config import google_analytics as ga
 
 # DEBUG = True
 DEBUG = False
@@ -31,7 +31,7 @@ async def log_event(
     suffix = "debug/" if DEBUG else ""
     url = (
         f"https://www.google-analytics.com/{suffix}mp/collect?"
-        f"measurement_id={GA_ID}&api_secret={GA_SECRET_KEY}"
+        f"measurement_id={ga.settings.id}&api_secret={ga.settings.secret_key}"
     )
 
     payload = {
