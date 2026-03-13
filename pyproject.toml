@@ -9,21 +9,21 @@ authors = [
 ]
 
 dependencies = [
-    "flet==0.81.0",
-    "flet-audio==0.81.0",
-    "flet-storage==1.1.0",
+    "flet==0.82.2",
+    "flet-audio==0.82.2",
+    "flet-storage==1.1.1",
     "httpx==0.28.1",
 ]
 
 [dependency-groups]
 dev = [
-    "flet-desktop-light==0.81.0",
-    "flet-cli==0.81.0",     # Необіхдно для продакшену (веб)
-    "flet-web==0.81.0",     # Необіхдно для продакшену (веб)
-    "flet-desktop==0.81.0", # Необіхдно для продакшену (веб)
+    "flet-desktop-light==0.82.2",
+    "flet-cli==0.82.2",     # Необіхдно для продакшену (веб)
+    "flet-web==0.82.2",     # Необіхдно для продакшену (веб)
+    "flet-desktop==0.82.2", # Необіхдно для продакшену (веб)
     "pre_commit==4.5.1",
-    "black==26.1.0",
-    "isort==8.0.0",
+    "black==26.3.1",
+    "isort==8.0.1",
 ]
 
 [tool.flet]
