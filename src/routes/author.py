@@ -15,7 +15,6 @@ from config import app, style
 from routes import about
 from utils import elements
 
-TITLE = "Про автора"
 ROUTE = app.settings.base_url + "/author"
 
 
@@ -23,7 +22,7 @@ def button(page, lang: list[LocaleManager]) -> ft.Button:
     "Кнопка екрану про автора"
 
     return ft.Button(
-        TITLE,
+        lang[0].get("author-title"),
         on_click=lambda: asyncio.create_task(page.push_route(ROUTE)),
     )
 
@@ -31,13 +30,14 @@ def button(page, lang: list[LocaleManager]) -> ft.Button:
 def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
     """Екран про автора"""
 
-    page.title = TITLE
+    page.title = lang[0].get("author-title")
+
     return ft.View(
         route=ROUTE,
         scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(TITLE, page),
+            elements.app_bar(lang[0].get("author-title"), page),
             ft.Text(""),
             ft.Image(
                 src="/images/bogdanovych-900x900.jpg",
@@ -45,13 +45,17 @@ def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
                 height=200,
             ),
             ft.Text(""),
-            ft.Text("Андрій БОГДАНОВИЧ", size=style.settings.text_size),
+            ft.Text(lang[0].get("author-name"), size=style.settings.text_size),
             ft.Text(
                 size=style.settings.text_size,
                 spans=[
-                    elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
+                    elements.link(
+                        lang[0].get("author-homepage"), "https://www.bogdanovych.org"
+                    ),
                     ft.TextSpan("\n"),
-                    elements.link("Інші застосунки", "https://apps.bogdanovych.org"),
+                    elements.link(
+                        lang[0].get("author-other-apps"), "https://apps.bogdanovych.org"
+                    ),
                 ],
             ),
             ft.Text(""),
