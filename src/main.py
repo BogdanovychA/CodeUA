@@ -342,7 +342,6 @@ async def main(page: ft.Page):
     audio = [_create_audio()]
 
     lang = [LocaleManager(default.settings.locale)]
-
     # lang = [LocaleManager("uk")]
     # lang = [LocaleManager("en")]
 
