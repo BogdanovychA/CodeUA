@@ -4,3 +4,4 @@ settings-set-time = Set
 settings-time-picker-confirm = Confirm
 settings-time-picker-error = Invalid time
 settings-time-picker-help = Select time
+settings-lang-switch = Change language

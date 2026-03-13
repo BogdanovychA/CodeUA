@@ -103,6 +103,12 @@ def build_view(
 
         alarm_block.update()
 
+    async def _lang_switch(event: ft.Event) -> None:
+        """Обробник перемикача мови"""
+        lang[0] = lang[0].create_manager(lang_switcher.value)
+        event.page.views.clear()
+        page.views.append(build_view(page, audio, storage, lang))
+
     alarm_time = page.session.store.get("alarm_time")
     hours, minutes, seconds = (alarm_time[k] for k in ("hours", "minutes", "seconds"))
 
@@ -149,6 +155,23 @@ def build_view(
         on_change=_switch,
     )
 
+    def _create_lang_switcher_options() -> list[ft.DropdownOption]:
+
+        options = []
+
+        for language in lang[0].languages:
+            options.append(ft.DropdownOption(key=language, text=language.upper()))
+
+        return options
+
+    lang_switcher = ft.Dropdown(
+        label=lang[0].get("settings-lang-switch", volume=int(audio[0].volume * 100)),
+        label_style=ft.TextStyle(size=style.settings.text_size),
+        value=lang[0].locale,
+        options=_create_lang_switcher_options(),
+        on_select=_lang_switch,
+    )
+
     page.title = lang[0].get("settings-title")
 
     return ft.View(
@@ -159,6 +182,8 @@ def build_view(
             elements.app_bar(lang[0].get("settings-title"), page),
             ft.Text(""),
             ft.Text(lang[0].get("settings-title"), size=style.settings.text_size),
+            ft.Text(""),
+            lang_switcher,
             ft.Text(""),
             alarm_on_selector,
             ft.Text(
