@@ -6,7 +6,7 @@
 .venv*/
 
 # Environmental variables
-.env
+src/assets/.env
 
 # Python-generated files
 **/__pycache__/

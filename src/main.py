@@ -357,4 +357,4 @@ async def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, assets_dir=app.settings.base_dir / "src" / "assets")
+    ft.run(main, assets_dir="assets")

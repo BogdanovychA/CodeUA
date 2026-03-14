@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     debug: bool = True
 
     model_config = SettingsConfigDict(
-        env_file=app.settings.base_dir / ".env",
+        env_file=app.settings.assets_dir / ".env",
         env_prefix="GOOGLE_ANALYTICS__",
         extra="ignore",
     )

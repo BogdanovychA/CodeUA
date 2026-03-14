@@ -9,7 +9,7 @@ from config import app, default
 
 class LocaleManager:
     default_locale = default.settings.locale
-    base_path = app.settings.base_dir / "locales"
+    base_path = app.settings.assets_dir / "locales"
     loader = FluentResourceLoader([base_path / "{locale}"])
     languages = os.listdir(base_path)
     resource_ids = [
