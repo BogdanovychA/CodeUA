@@ -14,7 +14,7 @@ class Settings(BaseModel):
         return Path(os.environ.get("FLET_ASSETS_DIR", default_assets_dir)).resolve()
 
     name: str = "CodeUA"
-    version: str = "1.2.0"
+    version: str = "1.2.1"
 
     base_url: str = ""
     assets_dir: Path = get_asset_dir()
