@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from utils.locale_manager import LocaleManager
+    from fluent_manager import FluentManager
 import flet as ft
 
 from config import app, style
@@ -13,7 +13,7 @@ from utils import elements
 ROUTE = app.settings.base_url + "/404"
 
 
-def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
+def build_view(page: ft.Page, lang: list[FluentManager]) -> ft.View:
     """Екран 404 помилки"""
 
     title = lang[0].get("error404-title")

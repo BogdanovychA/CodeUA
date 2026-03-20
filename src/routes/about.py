@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from utils.locale_manager import LocaleManager
+    from fluent_manager import FluentManager
 import asyncio
 
 import flet as ft
@@ -16,7 +16,7 @@ from utils import elements
 ROUTE = app.settings.base_url + "/about"
 
 
-def button(page, lang: list[LocaleManager]) -> ft.Button:
+def button(page, lang: list[FluentManager]) -> ft.Button:
     "Кнопка екрану про застосунок"
 
     return ft.Button(
@@ -25,7 +25,7 @@ def button(page, lang: list[LocaleManager]) -> ft.Button:
     )
 
 
-def build_view(page: ft.Page, lang: list[LocaleManager]) -> ft.View:
+def build_view(page: ft.Page, lang: list[FluentManager]) -> ft.View:
     """Екран про автора"""
 
     page.title = lang[0].get("about-title")

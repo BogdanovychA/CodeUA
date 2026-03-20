@@ -163,13 +163,13 @@ wheels = [
 
 [[package]]
 name = "codeua"
-version = "1.2.1"
+version = "1.2.2"
 source = { editable = "." }
 dependencies = [
     { name = "flet" },
     { name = "flet-audio" },
     { name = "flet-storage" },
-    { name = "fluent-runtime" },
+    { name = "fluent-manager" },
     { name = "httpx" },
     { name = "pydantic-settings" },
     { name = "pydentic" },
@@ -191,7 +191,7 @@ requires-dist = [
     { name = "flet", specifier = "==0.82.2" },
     { name = "flet-audio", specifier = "==0.82.2" },
     { name = "flet-storage", specifier = "==1.1.1" },
-    { name = "fluent-runtime", specifier = "==0.4.0" },
+    { name = "fluent-manager", specifier = "==1.0.0" },
     { name = "httpx", specifier = "==0.28.1" },
     { name = "pydantic-settings", specifier = "==2.13.1" },
     { name = "pydentic", specifier = "==0.0.1.dev3" },
@@ -384,6 +384,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ed/65/cd1c583d1a255c91c1f4706aff7613e8efe4f2036f6b8373cb428cf84780/flet_web-0.82.2.tar.gz", hash = "sha256:3db7b880d1db0aa84b019ba622d0f5a1ff2e0b216c5ebe308370996f85a97c36", size = 18349, upload-time = "2026-03-10T01:15:45.182Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/67/0c/0ecc19030c4c899c9ec3a0fdf655807db925bc2a46c2e18d0553553dc718/flet_web-0.82.2-py3-none-any.whl", hash = "sha256:818e42fdd2a156ea0969a9ea44e54bb772a85e3717fc22e7da80ba29786feb25", size = 23913129, upload-time = "2026-03-10T01:15:43.336Z" },
+]
+
+[[package]]
+name = "fluent-manager"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fluent-runtime" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/80/95/0f3699df16f8075068842a722a4b4b362cf34a9b7c3cb57640f1228d6597/fluent_manager-1.0.0.tar.gz", hash = "sha256:818a003fdf7f38a101681cbda3c7e32ee81e2be993e55342cfc2fc41bd48142f", size = 3128, upload-time = "2026-03-20T07:30:11.773Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ab/a8/58e4bbf8333bd918c5ad18fc7a13a4e10aa2ffb27bc7d5a804ac06e869f2/fluent_manager-1.0.0-py3-none-any.whl", hash = "sha256:647fffd733b91eaed6da9f98b70dd19dd93f8519f0b86825c7719db7a5ca2ed5", size = 3409, upload-time = "2026-03-20T07:30:10.381Z" },
 ]
 
 [[package]]

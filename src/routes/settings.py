@@ -6,6 +6,7 @@ from datetime import time
 from typing import TYPE_CHECKING
 
 import flet as ft
+from fluent_manager import FluentManager
 
 from config import app, default, style
 from routes import about, author
@@ -16,8 +17,6 @@ if TYPE_CHECKING:
     import flet_audio as fta
     from flet_storage import FletStorage
 
-    from utils.locale_manager import LocaleManager
-
 ROUTE = app.settings.base_url + "/settings"
 
 
@@ -25,7 +24,7 @@ def build_view(
     page: ft.Page,
     audio: list[fta.Audio],
     storage: FletStorage,
-    lang: list[LocaleManager],
+    lang: list[FluentManager],
 ) -> ft.View:
     """Екран налаштувань"""
 
@@ -107,7 +106,8 @@ def build_view(
         """Обробник перемикача мови"""
 
         new_locale = lang_switcher.value
-        lang[0] = lang[0].create_manager(new_locale)
+        lang[0] = FluentManager([new_locale], str(app.settings.locales_dir))
+
         await storage.set("locale", new_locale)
 
         event.page.views.clear()
@@ -168,7 +168,7 @@ def build_view(
     lang_switcher = ft.Dropdown(
         label=lang[0].get("settings-lang-switch", volume=int(audio[0].volume * 100)),
         label_style=ft.TextStyle(size=style.settings.text_size),
-        value=lang[0].locale,
+        value=lang[0].locales[0],
         options=_create_lang_switcher_options(),
         on_select=_lang_switch,
     )

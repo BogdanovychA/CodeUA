@@ -14,10 +14,11 @@ class Settings(BaseModel):
         return Path(os.environ.get("FLET_ASSETS_DIR", default_assets_dir)).resolve()
 
     name: str = "CodeUA"
-    version: str = "1.2.1"
+    version: str = "1.2.2"
 
     base_url: str = ""
     assets_dir: Path = get_asset_dir()
+    locales_dir: Path = assets_dir / "locales"
 
 
 settings = Settings()

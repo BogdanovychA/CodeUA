@@ -6,6 +6,7 @@ import uuid
 import flet as ft
 import flet_audio as fta
 from flet_storage import FletStorage
+from fluent_manager import FluentManager
 
 from config import app, default, style
 from config.sound import playlist
@@ -13,7 +14,6 @@ from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils import utils
-from utils.locale_manager import LocaleManager
 from utils.models import Track
 
 
@@ -21,7 +21,7 @@ def build_main_view(
     page: ft.Page,
     audio: list[fta.Audio],
     storage: FletStorage,
-    lang: list[LocaleManager],
+    lang: list[FluentManager],
 ) -> ft.View:
     """Головний екран застосунку"""
 
@@ -342,7 +342,7 @@ async def main(page: ft.Page):
     audio = [_create_audio()]
 
     locale = await storage.get_or_default("locale", default.settings.locale)
-    lang = [LocaleManager(locale)]
+    lang = [FluentManager([locale], str(app.settings.locales_dir))]
 
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:
