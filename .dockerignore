@@ -1,0 +1,27 @@
+# IDEs
+.idea/
+.vscode/
+
+# Virtual environments
+.venv*/
+
+# Environmental variables
+src/assets/.env
+
+# Python-generated files
+**/__pycache__/
+**/*.pyc
+*.py[oc]
+dist/
+wheels/
+*.egg-info
+build*/
+
+# Tests
+htmlcov/
+.pytest_cache/
+.coverage
+
+# Project
+bin/
+src/temp/

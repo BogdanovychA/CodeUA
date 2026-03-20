@@ -73,7 +73,7 @@ def build_view(
         await storage.set("alarm_time", new_alarm_time)
 
         alarm_block.value = (
-            f"{new_alarm_time["hours"]:02}:{new_alarm_time["minutes"]:02}"
+            f'{new_alarm_time["hours"]:02}:{new_alarm_time["minutes"]:02}'
         )
         alarm_block.update()
 

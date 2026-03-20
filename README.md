@@ -33,3 +33,5 @@
 
 * [Install and run](docs/install.md)
 * [Build the app](docs/build.md)
+* [Docker](docs/docker.md)
+
