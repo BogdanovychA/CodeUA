@@ -1,6 +1,6 @@
 [project]
 name = "codeua"
-version = "1.2.2"
+version = "1.2.3"
 description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -15,7 +15,7 @@ dependencies = [
     "fluent-manager==1.0.0",
     "httpx==0.28.1",
     "pydantic-settings==2.13.1",
-    "pydentic==0.0.1.dev3",
+    "pydantic==2.12.5",
 ]
 
 [dependency-groups]
