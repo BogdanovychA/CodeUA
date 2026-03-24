@@ -1,0 +1,12 @@
+name: codeua
+
+services:
+  flet-codeua:
+    image: bogdanovych/flet-codeua:latest
+    pull_policy: always
+    container_name: flet-codeua
+    restart: unless-stopped
+    env_file:
+      - src/assets/.env
+    ports:
+      - "8585:8080"
