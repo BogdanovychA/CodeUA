@@ -1,13 +1,19 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
+
+ENV TZ=Europe/Kyiv
 
 COPY pyproject.toml .
 COPY uv.lock .
 
-RUN uv pip install --system -r pyproject.toml flet-cli flet-web flet-desktop
+RUN uv pip install --system --no-cache -r pyproject.toml flet-cli flet-web flet-desktop
 
 COPY . .
 
