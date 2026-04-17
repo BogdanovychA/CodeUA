@@ -22,7 +22,7 @@ docker run -d \
   flet-codeua
 ```
 
-#### Або: 
+#### Або:
 ```bash
 docker run -it \
   -p 8585:8080 --name codeua-container \

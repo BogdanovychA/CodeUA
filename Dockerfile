@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.12-slim
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
@@ -11,6 +11,7 @@ WORKDIR /app
 ENV TZ=Europe/Kyiv
 
 COPY pyproject.toml .
+COPY .python-version .
 COPY uv.lock .
 
 RUN uv pip install --system --no-cache -r pyproject.toml flet-cli flet-web flet-desktop

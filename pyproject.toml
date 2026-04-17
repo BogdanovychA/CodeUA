@@ -3,7 +3,7 @@ name = "codeua"
 version = "1.2.4"
 description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 authors = [
     { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
@@ -11,8 +11,8 @@ authors = [
 dependencies = [
     "flet==0.82.2",
     "flet-audio==0.82.2",
-    "flet-storage==1.1.1",
-    "fluent-manager==1.0.0",
+    "flet-storage==1.1.2",
+    "fluent-manager==1.0.1",
     "httpx==0.28.1",
     "pydantic-settings==2.13.1",
     "pydantic==2.12.5",
@@ -45,7 +45,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ['py312']
 skip-string-normalization = true
 
 [tool.isort]
