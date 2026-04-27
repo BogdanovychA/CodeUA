@@ -1,33 +1,52 @@
-# IDEs
-.idea/
-.vscode/
+### Agents
+/.agents/
+
+### IDEs
+**/.idea/
+**/.vscode/
 
 # Virtual environments
 .venv*/
 
-# Environmental variables
-src/assets/.env
+### Environmental variables
+**/.env
+**/.env.*
+!**/.env.example
 
-# Python-generated files
+# OS
+**/*.tmp
+**/*.swp
+**/*.swo
+**/.cache
+**/.DS_Store
+**/Thumbs.db
+**/.thumbnails
+
+### Logs
+**/*.log
+**/logs/
+
+### Python-generated files
+**/__pypackages__/
 **/__pycache__/
 **/*.pyc
-*.py[oc]
-dist/
-wheels/
-*.egg-info
-build*/
+**/*.py[oc]
+**/dist/
+**/wheels/
+**/*.egg-info
+**/build*/
+**/.flet/
 
-# Tests
-htmlcov/
-.pytest_cache/
-.coverage
+### Tests
+**/htmlcov/
+**/.pytest_cache/
+**/.coverage
+**/.tox/
+**/.nox/
 
 # Project
 bin/
 src/temp/
-
-#
-**/*.tmp
 
 # Clouds
 **/.stfolder/

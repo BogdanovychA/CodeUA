@@ -1,27 +1,84 @@
-# IDEs
-.idea/
-.vscode/
+### Agents
+/.agents/
 
-# Virtual environments
-.venv*/
+### Git & Metadata
+**/.git/
+**/.gitignore
+**/.pre-commit-config.yaml
 
-# Environmental variables
-src/assets/.env
+### Docs & Info (not needed in container)
+/docs/
+/AUTHORS.md
+/LICENSE
+/NOTICE
+/SECURITY.md
+/CONTRIBUTING.md
+/CITATION.cff
+/README*
+/FUNDING.yml
+/CLAUDE.md
+/GEMINI.md
+/AGENTS.md
 
-# Python-generated files
+### IDEs
+**/.idea/
+**/.vscode/
+
+### Virtual environments
+**/.venv*/
+
+### Environmental variables
+**/.env
+**/.env.*
+
+# OS
+**/*.tmp
+**/*.swp
+**/*.swo
+**/.cache
+**/.DS_Store
+**/Thumbs.db
+**/.thumbnails
+
+### Logs
+**/*.log
+**/logs/
+
+### Python-generated files
+**/__pypackages__/
 **/__pycache__/
 **/*.pyc
-*.py[oc]
-dist/
-wheels/
-*.egg-info
-build*/
+**/*.py[oc]
+**/dist/
+**/wheels/
+**/*.egg-info
+**/build*/
+**/.flet/
 
-# Tests
-htmlcov/
-.pytest_cache/
-.coverage
+### Tests
+**/htmlcov/
+**/.pytest_cache/
+**/.coverage
+**/.tox/
+**/.nox/
 
 # Project
-bin/
-src/temp/
+/bin/
+/src/assets/locales
+/src/assets/sounds
+/src/temp/
+
+# Docker
+/docker_data/*
+/Dockerfile
+/docker-compose.yml
+/.dockerignore
+
+# Clouds
+**/.stfolder/
+**/.stversions/
+**/.stignore
+**/.syncthing.*.tmp
+**/~syncthing~*.tmp
+**/*sync-conflict*
+**/*conflicted*

@@ -1,12 +1,18 @@
 name: codeua
 
 services:
-  flet-codeua:
-    image: bogdanovych/flet-codeua:latest
-    pull_policy: always
-    container_name: flet-codeua
-    restart: unless-stopped
+  minigames:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codeua:${APP_VERSION}
+    pull_policy: missing
+    container_name: codeua
+    restart: always
     env_file:
       - src/assets/.env
+    volumes:
+      - ./src/assets/locales:/app/src/assets/locales
+      - ./src/assets/sounds:/app/src/assets/sounds
     ports:
-      - "8585:8080"
+      - "8006:8080"
