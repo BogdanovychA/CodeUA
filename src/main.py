@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+import logging
 import uuid
+from logging import INFO
 
 import flet as ft
 import flet_audio as fta
@@ -15,6 +17,15 @@ from utils import elements
 from utils import measurement_api as ga
 from utils import utils
 from utils.models import Track
+
+logging.basicConfig(
+    level=INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
+logger = logging.getLogger(__name__)
 
 
 def build_main_view(
