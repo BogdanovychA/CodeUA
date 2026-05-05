@@ -15,4 +15,4 @@ services:
       - ./src/assets/locales:/app/src/assets/locales
       - ./src/assets/sounds:/app/src/assets/sounds
     ports:
-      - "8006:8080"
+      - "8006:8000"

@@ -9,12 +9,14 @@ RUN uv sync --frozen --no-dev --no-install-project
 
 COPY . .
 RUN uv sync --frozen --no-dev
+RUN uv pip install --python /app/.venv flet-web
 
 FROM python:3.12-slim-bookworm
 
 ENV TZ=Europe/Kyiv \
     PATH="/app/.venv/bin:$PATH" \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    FLET_FORCE_WEB_SERVER=true
 
 WORKDIR /app
 
@@ -28,6 +30,6 @@ COPY --from=builder --chown=appuser:appuser /app /app
 
 USER appuser
 
-EXPOSE 8080
+EXPOSE 8000
 
-CMD ["flet", "run", "--web", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "src/main.py"]

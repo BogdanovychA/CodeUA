@@ -1,6 +1,6 @@
 [project]
 name = "codeua"
-version = "1.2.5"
+version = "1.2.6"
 description = "Application for honoring Ukrainian Heroes"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -11,9 +11,6 @@ authors = [
 dependencies = [
     "flet==0.84.0",
     "flet-audio==0.84.0",
-    "flet-cli==0.84.0",     # Необіхдно для продакшену (веб)
-    "flet-web==0.84.0",     # Необіхдно для продакшену (веб)
-    "flet-desktop==0.84.0", # Необіхдно для продакшену (веб)
     "flet-storage==1.1.3",
     "fluent-manager==1.0.2",
     "httpx==0.28.1",
@@ -23,7 +20,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-
+    "flet-cli==0.84.0",
+    "flet-web==0.84.0",
+    "flet-desktop==0.84.0",
     "flet-desktop-light",
     "pre_commit",
     "black",
