@@ -83,33 +83,33 @@ def build_main_view(
 
         while True:
 
-            if timer.value != box.time_left:
-                timer.value = box.time_left
-                timer.update()
+            try:
+                if timer.value != box.time_left:
+                    timer.value = box.time_left
+
+            except RuntimeError:
+                logger.info("RuntimeError")
+                await asyncio.sleep(0.1)
+                continue
 
             if box.alarm_on:
                 if timer.style.color != ft.Colors.PRIMARY:
                     timer.style.color = ft.Colors.PRIMARY
-                    timer.update()
             else:
                 if timer.style.color != ft.Colors.ON_PRIMARY:
                     timer.style.color = ft.Colors.ON_PRIMARY
-                    timer.update()
 
             if box.repeat:
                 if repeat_button.icon != ft.Icons.REPEAT_ON:
                     repeat_button.icon = ft.Icons.REPEAT_ON
-                    repeat_button.update()
             else:
                 if repeat_button.icon != ft.Icons.REPEAT:
                     repeat_button.icon = ft.Icons.REPEAT
-                    repeat_button.update()
 
             match box.audio_state:
                 case fta.AudioState.PLAYING:
                     if player_control[1] != pause_button:
                         player_control[1] = pause_button
-                        controller.update()
 
                 case fta.AudioState.DISPOSED:  # audio player has been disposed
                     pass
@@ -117,7 +117,6 @@ def build_main_view(
                 case _:
                     if player_control[1] != play_button:
                         player_control[1] = play_button
-                        controller.update()
 
             page.update()
             await asyncio.sleep(0.5)
