@@ -313,18 +313,12 @@ async def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    storage = FletStorage(app.settings.name)
-
-    # Ініціалізація PandorasBox
     box = PandorasBox(
-        lang=None,  # Буде ініціалізовано пізніше
-        audio=None,  # Буде ініціалізовано пізніше
-        storage=storage,
+        storage=FletStorage(app.settings.name),
     )
 
     await _init()
 
-    # Створюємо аудіо та додаємо в бокс
     box.audio = _create_audio()
 
     locale = await box.storage.get_or_default("locale", default.settings.locale)

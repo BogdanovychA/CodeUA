@@ -33,9 +33,9 @@ class Bool(StrEnum):
 class PandorasBox:
     """Контейнер стану застосунку"""
 
-    lang: FluentManager
-    audio: fta.Audio
     storage: FletStorage
+    lang: FluentManager | None = None
+    audio: fta.Audio | None = None
 
     # State variables
     audio_state: fta.AudioState | None = None
