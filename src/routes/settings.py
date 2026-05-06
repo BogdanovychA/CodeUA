@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import annotations
 
 from datetime import time
-from typing import TYPE_CHECKING
 
 import flet as ft
 from fluent_manager import FluentManager
@@ -11,27 +9,21 @@ from fluent_manager import FluentManager
 from config import app, default, style
 from routes import about, author
 from utils import elements
-from utils.models import Bool
-
-if TYPE_CHECKING:
-    import flet_audio as fta
-    from flet_storage import FletStorage
+from utils.models import Bool, PandorasBox
 
 ROUTE = app.settings.base_url + "/settings"
 
 
 def build_view(
     page: ft.Page,
-    audio: list[fta.Audio],
-    storage: FletStorage,
-    lang: list[FluentManager],
+    box: PandorasBox,
 ) -> ft.View:
     """Екран налаштувань"""
 
     async def _clear_cache() -> None:
         """Обробник кнопки очистки кешу"""
 
-        await storage.clear()
+        await box.storage.clear()
         await _reset()
 
     async def _reset() -> None:
@@ -43,7 +35,7 @@ def build_view(
 
         # Скидання вкл/викл будильника
         page.session.store.set("alarm_on", True)
-        await storage.set("alarm_on", True)
+        await box.storage.set("alarm_on", True)
         alarm_on_selector.selected[0] = Bool.TRUE
         alarm_on_selector.update()
 
@@ -51,26 +43,11 @@ def build_view(
         alarm_block.style.color = ft.Colors.PRIMARY
         alarm_block.update()
 
-        # Скидання треку
-        # await storage.set("track_name", DEFAULT_TRACK)
-        # page.session.store.set("track_name", DEFAULT_TRACK)
-        # audio[0].src = playlist[DEFAULT_TRACK]
-        # await audio[0].pause()
-        # await audio[0].seek(ft.Duration(0))
-
-        # Скидання гучності
-        # audio[0].volume = DEFAULT_VOLUME
-        # await storage.set("volume", DEFAULT_VOLUME)
-
-        # Скидання повтору треку
-        # page.session.store.set("repeat", DEFAULT_REPEAT)
-        # await storage.set("repeat", DEFAULT_REPEAT)
-
     async def _set_alarm(new_alarm_time: dict) -> None:
         """Встановлення будильника"""
 
         page.session.store.set("alarm_time", new_alarm_time)
-        await storage.set("alarm_time", new_alarm_time)
+        await box.storage.set("alarm_time", new_alarm_time)
 
         alarm_block.value = (
             f'{new_alarm_time["hours"]:02}:{new_alarm_time["minutes"]:02}'
@@ -93,11 +70,11 @@ def build_view(
 
         if event.control.selected[0] == Bool.TRUE:
             page.session.store.set("alarm_on", True)
-            await storage.set("alarm_on", True)
+            await box.storage.set("alarm_on", True)
             alarm_block.style.color = ft.Colors.PRIMARY
         else:
             page.session.store.set("alarm_on", False)
-            await storage.set("alarm_on", False)
+            await box.storage.set("alarm_on", False)
             alarm_block.style.color = ft.Colors.ON_PRIMARY
 
         alarm_block.update()
@@ -106,12 +83,12 @@ def build_view(
         """Обробник перемикача мови"""
 
         new_locale = lang_switcher.value
-        lang[0] = FluentManager([new_locale], str(app.settings.locales_dir))
+        box.lang = FluentManager([new_locale], str(app.settings.locales_dir))
 
-        await storage.set("locale", new_locale)
+        await box.storage.set("locale", new_locale)
 
         event.page.views.clear()
-        event.page.views.append(build_view(page, audio, storage, lang))
+        event.page.views.append(build_view(page, box))
 
     alarm_time = page.session.store.get("alarm_time")
     hours, minutes, seconds = (alarm_time[k] for k in ("hours", "minutes", "seconds"))
@@ -131,9 +108,9 @@ def build_view(
 
     time_picker = ft.TimePicker(
         value=time(hour=hours, minute=minutes, second=seconds),
-        confirm_text=lang[0].get("settings-time-picker-confirm"),
-        error_invalid_text=lang[0].get("settings-time-picker-error"),
-        help_text=lang[0].get("settings-time-picker-help"),
+        confirm_text=box.lang.get("settings-time-picker-confirm"),
+        error_invalid_text=box.lang.get("settings-time-picker-error"),
+        help_text=box.lang.get("settings-time-picker-help"),
         entry_mode=ft.TimePickerEntryMode.DIAL,
         hour_format=ft.TimePickerHourFormat.H24,
         on_change=_change,
@@ -147,12 +124,10 @@ def build_view(
         segments=[
             ft.Segment(
                 value=Bool.TRUE,
-                # label=ft.Text(Bool.TRUE),
                 icon=ft.Icons.NOTIFICATIONS_ACTIVE_ROUNDED,
             ),
             ft.Segment(
                 value=Bool.FALSE,
-                # label=ft.Text(Bool.FALSE),
                 icon=ft.Icons.NOTIFICATIONS_OFF_ROUNDED,
             ),
         ],
@@ -161,40 +136,40 @@ def build_view(
 
     def _create_lang_switcher_options() -> list[ft.DropdownOption]:
         options = []
-        for language in lang[0].languages:
+        for language in box.lang.languages:
             options.append(ft.DropdownOption(key=language, text=language.upper()))
         return options
 
     lang_switcher = ft.Dropdown(
-        label=lang[0].get("settings-lang-switch", volume=int(audio[0].volume * 100)),
+        label=box.lang.get("settings-lang-switch", volume=int(box.audio.volume * 100)),
         label_style=ft.TextStyle(size=style.settings.text_size),
-        value=lang[0].locales[0],
+        value=box.lang.locales[0],
         options=_create_lang_switcher_options(),
         on_select=_lang_switch,
     )
 
-    page.title = lang[0].get("settings-title")
+    page.title = box.lang.get("settings-title")
 
     return ft.View(
         route=ROUTE,
         scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(lang[0].get("settings-title"), page),
+            elements.app_bar(box.lang.get("settings-title"), page),
             ft.Text(""),
-            ft.Text(lang[0].get("settings-title"), size=style.settings.text_size),
+            ft.Text(box.lang.get("settings-title"), size=style.settings.text_size),
             ft.Text(""),
             lang_switcher,
             ft.Text(""),
             alarm_on_selector,
             ft.Text(
-                lang[0].get("settings-alarm-time-label"), size=style.settings.text_size
+                box.lang.get("settings-alarm-time-label"), size=style.settings.text_size
             ),
             alarm_block,
             ft.Row(
                 controls=[
                     ft.Button(
-                        content=lang[0].get("settings-set-time"),
+                        content=box.lang.get("settings-set-time"),
                         on_click=lambda: page.show_dialog(time_picker),
                     ),
                     ft.IconButton(
@@ -204,19 +179,14 @@ def build_view(
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
-            # ft.Button(
-            #     content="Видалити кеш",
-            #     icon=ft.Icons.DELETE_SWEEP,
-            #     on_click=_clear_cache,
-            # ),
             ft.Text(""),
             ft.Row(
                 controls=[
-                    author.button(page, lang),
-                    about.button(page, lang),
+                    author.button(page, box),
+                    about.button(page, box),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
-            elements.back_button(page, lang),
+            elements.back_button(page, box),
         ],
     )

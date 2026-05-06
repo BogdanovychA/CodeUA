@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from fluent_manager import FluentManager
+    from utils.models import PandorasBox
 
 import asyncio
 
@@ -18,26 +18,26 @@ from utils import elements
 ROUTE = app.settings.base_url + "/author"
 
 
-def button(page, lang: list[FluentManager]) -> ft.Button:
+def button(page, box: PandorasBox) -> ft.Button:
     "Кнопка екрану про автора"
 
     return ft.Button(
-        lang[0].get("author-title"),
+        box.lang.get("author-title"),
         on_click=lambda: asyncio.create_task(page.push_route(ROUTE)),
     )
 
 
-def build_view(page: ft.Page, lang: list[FluentManager]) -> ft.View:
+def build_view(page: ft.Page, box: PandorasBox) -> ft.View:
     """Екран про автора"""
 
-    page.title = lang[0].get("author-title")
+    page.title = box.lang.get("author-title")
 
     return ft.View(
         route=ROUTE,
         scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(lang[0].get("author-title"), page),
+            elements.app_bar(box.lang.get("author-title"), page),
             ft.Text(""),
             ft.Image(
                 src="/images/bogdanovych-900x900.jpg",
@@ -45,21 +45,22 @@ def build_view(page: ft.Page, lang: list[FluentManager]) -> ft.View:
                 height=200,
             ),
             ft.Text(""),
-            ft.Text(lang[0].get("author-name"), size=style.settings.text_size),
+            ft.Text(box.lang.get("author-name"), size=style.settings.text_size),
             ft.Text(
                 size=style.settings.text_size,
                 spans=[
                     elements.link(
-                        lang[0].get("author-homepage"), "https://www.bogdanovych.org"
+                        box.lang.get("author-homepage"), "https://www.bogdanovych.org"
                     ),
                     ft.TextSpan("\n"),
                     elements.link(
-                        lang[0].get("author-other-apps"), "https://apps.bogdanovych.org"
+                        box.lang.get("author-other-apps"),
+                        "https://apps.bogdanovych.org",
                     ),
                 ],
             ),
             ft.Text(""),
-            about.button(page, lang),
-            elements.back_button(page, lang),
+            about.button(page, box),
+            elements.back_button(page, box),
         ],
     )

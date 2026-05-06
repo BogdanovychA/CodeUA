@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from utils.models import PandorasBox
+
 import asyncio
 
 import flet as ft
@@ -8,11 +15,11 @@ from config import style
 from routes import root
 
 
-def back_button(page, lang) -> ft.Button:
+def back_button(page, box: PandorasBox) -> ft.Button:
     """Кнопка 'назад'"""
 
     return ft.Button(
-        lang[0].get("elements-common-back"),
+        box.lang.get("elements-common-back"),
         icon=ft.Icons.ARROW_BACK,
         on_click=lambda: asyncio.create_task(page.push_route(root.ROUTE)),
     )

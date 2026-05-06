@@ -16,7 +16,7 @@ from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils import utils
-from utils.models import Track
+from utils.models import PandorasBox, Track
 
 logging.basicConfig(
     level=INFO,
@@ -30,9 +30,7 @@ logger = logging.getLogger(__name__)
 
 def build_main_view(
     page: ft.Page,
-    audio: list[fta.Audio],
-    storage: FletStorage,
-    lang: list[FluentManager],
+    box: PandorasBox,
 ) -> ft.View:
     """Головний екран застосунку"""
 
@@ -42,37 +40,37 @@ def build_main_view(
         audio_state = page.session.store.get("audio_state")
         match audio_state:
             case fta.AudioState.PAUSED:
-                await audio[0].resume()
+                await box.audio.resume()
             case fta.AudioState.DISPOSED:  # audio player has been disposed
                 pass
             case _:
-                await audio[0].play()
+                await box.audio.play()
 
     async def _stop():
         """Обробник натискання кнопки stop"""
 
-        await audio[0].pause()
-        await audio[0].seek(ft.Duration(0))
+        await box.audio.pause()
+        await box.audio.seek(ft.Duration(0))
 
     async def _pause():
         """Обробник натискання кнопки pause"""
 
-        await audio[0].pause()
+        await box.audio.pause()
 
     async def _repeat():
         repeat = page.session.store.get("repeat")
         repeat = False if repeat else True
         page.session.store.set("repeat", repeat)
-        await storage.set("repeat", repeat)
+        await box.storage.set("repeat", repeat)
 
     async def _set_volume(value: float):
         """Обробник кнопок зміни гучності"""
 
-        new_volume = round(utils.clamp_value(audio[0].volume + value, 0, 1), 1)
-        audio[0].volume = new_volume
-        audio[0].update()
-        await storage.set("volume", new_volume)
-        switcher.label = lang[0].get("main-volume-label", volume=int(new_volume * 100))
+        new_volume = round(utils.clamp_value(box.audio.volume + value, 0, 1), 1)
+        box.audio.volume = new_volume
+        box.audio.update()
+        await box.storage.set("volume", new_volume)
+        switcher.label = box.lang.get("main-volume-label", volume=int(new_volume * 100))
         switcher.update()
 
     async def _switch():
@@ -80,8 +78,8 @@ def build_main_view(
 
         await _pause()
         page.session.store.set("track_name", switcher.value)
-        await storage.set("track_name", switcher.value)
-        audio[0].src = playlist[switcher.value]
+        await box.storage.set("track_name", switcher.value)
+        box.audio.src = playlist[switcher.value]
 
     async def _ui_update():
         """Фоновий таск оновлення інтерфейсу"""
@@ -132,16 +130,18 @@ def build_main_view(
             await asyncio.sleep(0.5)
 
     switcher = ft.Dropdown(
-        label=lang[0].get("main-volume-label", volume=int(audio[0].volume * 100)),
+        label=box.lang.get("main-volume-label", volume=int(box.audio.volume * 100)),
         label_style=ft.TextStyle(size=style.settings.text_size),
         value=page.session.store.get("track_name"),
         options=[
-            ft.DropdownOption(key=Track.MOMENT, text=lang[0].get("main-track-silence")),
             ft.DropdownOption(
-                key=Track.ANTHEM, text=lang[0].get("main-track-anthem-1")
+                key=Track.MOMENT, text=box.lang.get("main-track-silence")
             ),
             ft.DropdownOption(
-                key=Track.ANTHEM_2, text=lang[0].get("main-track-anthem-2")
+                key=Track.ANTHEM, text=box.lang.get("main-track-anthem-1")
+            ),
+            ft.DropdownOption(
+                key=Track.ANTHEM_2, text=box.lang.get("main-track-anthem-2")
             ),
         ],
         on_select=_switch,
@@ -186,7 +186,7 @@ def build_main_view(
         alignment=ft.MainAxisAlignment.CENTER,
     )
 
-    page.title = lang[0].get("main-title")
+    page.title = box.lang.get("main-title")
 
     _ui_update_task = page.run_task(_ui_update)
     page.session.store.set("_ui_update_task", _ui_update_task)
@@ -196,7 +196,7 @@ def build_main_view(
         scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(lang[0].get("main-title"), page),
+            elements.app_bar(box.lang.get("main-title"), page),
             ft.Text(""),
             ft.Image(
                 src="/favicon.png",
@@ -205,7 +205,7 @@ def build_main_view(
             ),
             ft.Text(""),
             ft.Text(
-                lang[0].get("main-memory-title"),
+                box.lang.get("main-memory-title"),
                 size=style.settings.text_size,
             ),
             timer,
@@ -215,8 +215,8 @@ def build_main_view(
             ft.Text(""),
             ft.Row(
                 controls=[
-                    author.button(page, lang),
-                    about.button(page, lang),
+                    author.button(page, box),
+                    about.button(page, box),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
@@ -243,17 +243,17 @@ async def main(page: ft.Page):
             _ui_update_task.cancel()
 
         page.views.clear()
-        page.views.append(build_main_view(page, audio, storage, lang))
+        page.views.append(build_main_view(page, box))
         match page.route:
             case settings.ROUTE:
-                page.views.append(settings.build_view(page, audio, storage, lang))
+                page.views.append(settings.build_view(page, box))
             case author.ROUTE:
-                page.views.append(author.build_view(page, lang))
+                page.views.append(author.build_view(page, box))
             case about.ROUTE:
-                page.views.append(about.build_view(page, lang))
+                page.views.append(about.build_view(page, box))
             case _:
                 if page.route != root.ROUTE:
-                    page.views.append(error404.build_view(page, lang))
+                    page.views.append(error404.build_view(page, box))
 
         page.update()
 
@@ -274,7 +274,7 @@ async def main(page: ft.Page):
             hours, minutes, seconds = utils.check_delta(**alarm_time)
 
             if page.session.store.get("alarm_on") and hours == minutes == seconds == 0:
-                await audio[0].play()
+                await box.audio.play()
 
             page.session.store.set("time_left", f"{hours:02}:{minutes:02}:{seconds:02}")
 
@@ -288,19 +288,7 @@ async def main(page: ft.Page):
         match event.state:
             case fta.AudioState.COMPLETED:
                 if page.session.store.get("repeat"):
-                    await audio[0].play()
-
-        #     case fta.AudioState.DISPOSED:
-        #         # Перестворюємо об'єкт (для перестраховки :))
-        #         audio[0] = _create_audio()
-        #     case fta.AudioState.PLAYING:
-        #         pass
-        #     case fta.AudioState.STOPPED:
-        #         pass
-        #     case fta.AudioState.PAUSED:
-        #         pass
-        #     case None:
-        #         pass
+                    await box.audio.play()
 
     def _create_audio() -> fta.Audio:
         """Створення об'єкта плеєра"""
@@ -312,11 +300,6 @@ async def main(page: ft.Page):
             volume=page.session.store.get("volume"),
             balance=0,
             on_state_change=lambda e: asyncio.create_task(_state_change(e)),
-            # on_state_change=lambda e: _state_change(e),
-            # on_loaded=lambda _: print("Loaded"),
-            # on_duration_change=lambda e: print("Duration changed:", e.duration),
-            # on_position_change=lambda e: print("Position changed:", e.position),
-            # on_seek_complete=lambda _: print("Seek complete"),
         )
 
     async def _init() -> None:
@@ -326,7 +309,7 @@ async def main(page: ft.Page):
             """Допоміжна функція ініціалізації об'єктів,
             зчитування налаштувань з кешу"""
 
-            value = await storage.get_or_default(name, default_value)
+            value = await box.storage.get_or_default(name, default_value)
             page.session.store.set(name, value)
 
         await __init_obj("alarm_time", default.settings.alarm_time.copy())
@@ -346,20 +329,26 @@ async def main(page: ft.Page):
 
     storage = FletStorage(app.settings.name)
 
+    # Ініціалізація PandorasBox
+    box = PandorasBox(
+        lang=None,  # Буде ініціалізовано пізніше
+        audio=None,  # Буде ініціалізовано пізніше
+        storage=storage,
+    )
+
     await _init()
 
-    # Об'єкт вкладаємо в єдиний елемент списку, щоб мати можливість
-    # його перестворювати, не змінюючи посилання на об'єкт
-    audio = [_create_audio()]
+    # Створюємо аудіо та додаємо в бокс
+    box.audio = _create_audio()
 
-    locale = await storage.get_or_default("locale", default.settings.locale)
-    lang = [FluentManager([locale], str(app.settings.locales_dir))]
+    locale = await box.storage.get_or_default("locale", default.settings.locale)
+    box.lang = FluentManager([locale], str(app.settings.locales_dir))
 
     global_task_is_running = page.session.store.get("global_task_is_running")
     if not global_task_is_running:
         page.run_task(_check_time)
 
-    page.title = lang[0].get("main-title")
+    page.title = box.lang.get("main-title")
 
     page.theme_mode = ft.ThemeMode.DARK
     page.route = root.ROUTE
