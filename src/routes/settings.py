@@ -34,7 +34,7 @@ def build_view(
         await _set_alarm(new_alarm_time)
 
         # Скидання вкл/викл будильника
-        page.session.store.set("alarm_on", True)
+        box.alarm_on = True
         await box.storage.set("alarm_on", True)
         alarm_on_selector.selected[0] = Bool.TRUE
         alarm_on_selector.update()
@@ -46,7 +46,7 @@ def build_view(
     async def _set_alarm(new_alarm_time: dict) -> None:
         """Встановлення будильника"""
 
-        page.session.store.set("alarm_time", new_alarm_time)
+        box.alarm_time = new_alarm_time
         await box.storage.set("alarm_time", new_alarm_time)
 
         alarm_block.value = (
@@ -69,11 +69,11 @@ def build_view(
         """Обробник перемикача вкл/викл будильника"""
 
         if event.control.selected[0] == Bool.TRUE:
-            page.session.store.set("alarm_on", True)
+            box.alarm_on = True
             await box.storage.set("alarm_on", True)
             alarm_block.style.color = ft.Colors.PRIMARY
         else:
-            page.session.store.set("alarm_on", False)
+            box.alarm_on = False
             await box.storage.set("alarm_on", False)
             alarm_block.style.color = ft.Colors.ON_PRIMARY
 
@@ -90,17 +90,14 @@ def build_view(
         event.page.views.clear()
         event.page.views.append(build_view(page, box))
 
-    alarm_time = page.session.store.get("alarm_time")
-    hours, minutes, seconds = (alarm_time[k] for k in ("hours", "minutes", "seconds"))
+    hours, minutes, seconds = (
+        box.alarm_time[k] for k in ("hours", "minutes", "seconds")
+    )
 
     alarm_block = ft.Text(
         f"{hours:02}:{minutes:02}",
         style=ft.TextStyle(
-            color=(
-                ft.Colors.PRIMARY
-                if page.session.store.get("alarm_on")
-                else ft.Colors.ON_PRIMARY
-            ),
+            color=(ft.Colors.PRIMARY if box.alarm_on else ft.Colors.ON_PRIMARY),
             weight=ft.FontWeight.BOLD,
         ),
         size=style.settings.text_size,
@@ -117,7 +114,7 @@ def build_view(
     )
 
     alarm_on_selector = ft.SegmentedButton(
-        selected=[Bool.TRUE if page.session.store.get("alarm_on") else Bool.FALSE],
+        selected=[Bool.TRUE if box.alarm_on else Bool.FALSE],
         allow_empty_selection=False,
         allow_multiple_selection=False,
         show_selected_icon=False,

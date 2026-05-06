@@ -7,6 +7,8 @@ from enum import StrEnum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    import asyncio
+
     import flet_audio as fta
     from flet_storage import FletStorage
     from fluent_manager import FluentManager
@@ -34,3 +36,15 @@ class PandorasBox:
     lang: FluentManager
     audio: fta.Audio
     storage: FletStorage
+
+    # State variables
+    audio_state: fta.AudioState | None = None
+    repeat: bool = False
+    track_name: Track = Track.MOMENT
+    time_left: str = "23:59:59"
+    alarm_on: bool = True
+    alarm_time: dict | None = None
+    volume: float = 0.5
+    client_id: str = ""
+    ui_update_task: asyncio.Task | None = None
+    global_task_is_running: bool = False

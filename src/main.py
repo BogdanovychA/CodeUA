@@ -37,8 +37,7 @@ def build_main_view(
     async def _play():
         """Обробник натискання кнопки play"""
 
-        audio_state = page.session.store.get("audio_state")
-        match audio_state:
+        match box.audio_state:
             case fta.AudioState.PAUSED:
                 await box.audio.resume()
             case fta.AudioState.DISPOSED:  # audio player has been disposed
@@ -58,10 +57,8 @@ def build_main_view(
         await box.audio.pause()
 
     async def _repeat():
-        repeat = page.session.store.get("repeat")
-        repeat = False if repeat else True
-        page.session.store.set("repeat", repeat)
-        await box.storage.set("repeat", repeat)
+        box.repeat = not box.repeat
+        await box.storage.set("repeat", box.repeat)
 
     async def _set_volume(value: float):
         """Обробник кнопок зміни гучності"""
@@ -77,22 +74,20 @@ def build_main_view(
         """Обробник зміни треків"""
 
         await _pause()
-        page.session.store.set("track_name", switcher.value)
-        await box.storage.set("track_name", switcher.value)
-        box.audio.src = playlist[switcher.value]
+        box.track_name = switcher.value
+        await box.storage.set("track_name", box.track_name)
+        box.audio.src = playlist[box.track_name]
 
     async def _ui_update():
         """Фоновий таск оновлення інтерфейсу"""
 
         while True:
 
-            time_left = page.session.store.get("time_left")
-            if timer.value != time_left:
-                timer.value = time_left
+            if timer.value != box.time_left:
+                timer.value = box.time_left
                 timer.update()
 
-            alarm_on = page.session.store.get("alarm_on")
-            if alarm_on:
+            if box.alarm_on:
                 if timer.style.color != ft.Colors.PRIMARY:
                     timer.style.color = ft.Colors.PRIMARY
                     timer.update()
@@ -101,8 +96,7 @@ def build_main_view(
                     timer.style.color = ft.Colors.ON_PRIMARY
                     timer.update()
 
-            repeat = page.session.store.get("repeat")
-            if repeat:
+            if box.repeat:
                 if repeat_button.icon != ft.Icons.REPEAT_ON:
                     repeat_button.icon = ft.Icons.REPEAT_ON
                     repeat_button.update()
@@ -111,8 +105,7 @@ def build_main_view(
                     repeat_button.icon = ft.Icons.REPEAT
                     repeat_button.update()
 
-            audio_state = page.session.store.get("audio_state")
-            match audio_state:
+            match box.audio_state:
                 case fta.AudioState.PLAYING:
                     if player_control[1] != pause_button:
                         player_control[1] = pause_button
@@ -132,7 +125,7 @@ def build_main_view(
     switcher = ft.Dropdown(
         label=box.lang.get("main-volume-label", volume=int(box.audio.volume * 100)),
         label_style=ft.TextStyle(size=style.settings.text_size),
-        value=page.session.store.get("track_name"),
+        value=box.track_name,
         options=[
             ft.DropdownOption(
                 key=Track.MOMENT, text=box.lang.get("main-track-silence")
@@ -151,11 +144,7 @@ def build_main_view(
         "",
         size=style.settings.text_size,
         style=ft.TextStyle(
-            color=(
-                ft.Colors.PRIMARY
-                if page.session.store.get("alarm_on")
-                else ft.Colors.ON_PRIMARY
-            ),
+            color=(ft.Colors.PRIMARY if box.alarm_on else ft.Colors.ON_PRIMARY),
             weight=ft.FontWeight.BOLD,
         ),
     )
@@ -188,8 +177,7 @@ def build_main_view(
 
     page.title = box.lang.get("main-title")
 
-    _ui_update_task = page.run_task(_ui_update)
-    page.session.store.set("_ui_update_task", _ui_update_task)
+    box.ui_update_task = page.run_task(_ui_update)
 
     return ft.View(
         route=root.ROUTE,
@@ -232,15 +220,14 @@ async def main(page: ft.Page):
 
         page.run_task(
             ga.log_event,
-            page.session.store.get("client_id"),
+            box.client_id,
             str(page.platform.value),
             "route_change",
             page.route,
         )
 
-        _ui_update_task = page.session.store.get("_ui_update_task")
-        if _ui_update_task:
-            _ui_update_task.cancel()
+        if box.ui_update_task:
+            box.ui_update_task.cancel()
 
         page.views.clear()
         page.views.append(build_main_view(page, box))
@@ -266,38 +253,37 @@ async def main(page: ft.Page):
     async def _check_time():
         """Головний фоновий обробник автоматичного спрацювання мелодії"""
 
-        page.session.store.set("global_task_is_running", True)
+        box.global_task_is_running = True
 
         while True:
 
-            alarm_time = page.session.store.get("alarm_time")
-            hours, minutes, seconds = utils.check_delta(**alarm_time)
+            hours, minutes, seconds = utils.check_delta(**box.alarm_time)
 
-            if page.session.store.get("alarm_on") and hours == minutes == seconds == 0:
+            if box.alarm_on and hours == minutes == seconds == 0:
                 await box.audio.play()
 
-            page.session.store.set("time_left", f"{hours:02}:{minutes:02}:{seconds:02}")
+            box.time_left = f"{hours:02}:{minutes:02}:{seconds:02}"
 
             await asyncio.sleep(1)
 
     async def _state_change(event: fta.AudioStateChangeEvent | None):
         """Обробник зміни статусу програвання мелодії"""
 
-        page.session.store.set("audio_state", event.state)
+        box.audio_state = event.state
 
         match event.state:
             case fta.AudioState.COMPLETED:
-                if page.session.store.get("repeat"):
+                if box.repeat:
                     await box.audio.play()
 
     def _create_audio() -> fta.Audio:
         """Створення об'єкта плеєра"""
 
         return fta.Audio(
-            src=playlist[page.session.store.get("track_name")],
+            src=playlist[box.track_name],
             autoplay=False,
             release_mode=fta.ReleaseMode.STOP,
-            volume=page.session.store.get("volume"),
+            volume=box.volume,
             balance=0,
             on_state_change=lambda e: asyncio.create_task(_state_change(e)),
         )
@@ -310,7 +296,7 @@ async def main(page: ft.Page):
             зчитування налаштувань з кешу"""
 
             value = await box.storage.get_or_default(name, default_value)
-            page.session.store.set(name, value)
+            setattr(box, name, value)
 
         await __init_obj("alarm_time", default.settings.alarm_time.copy())
         await __init_obj("track_name", default.settings.track)
@@ -319,10 +305,10 @@ async def main(page: ft.Page):
         await __init_obj("client_id", str(uuid.uuid4()))
         await __init_obj("repeat", default.settings.repeat)
 
-        page.session.store.set("time_left", "23:59:59")
-        page.session.store.set("_ui_update_task", None)
-        page.session.store.set("global_task_is_running", False)
-        page.session.store.set("audio_state", None)
+        box.time_left = "23:59:59"
+        box.ui_update_task = None
+        box.global_task_is_running = False
+        box.audio_state = None
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
@@ -344,8 +330,7 @@ async def main(page: ft.Page):
     locale = await box.storage.get_or_default("locale", default.settings.locale)
     box.lang = FluentManager([locale], str(app.settings.locales_dir))
 
-    global_task_is_running = page.session.store.get("global_task_is_running")
-    if not global_task_is_running:
+    if not box.global_task_is_running:
         page.run_task(_check_time)
 
     page.title = box.lang.get("main-title")
