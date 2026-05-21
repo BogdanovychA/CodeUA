@@ -24,12 +24,11 @@ dev = [
     "flet-web==0.85.1",
     "flet-desktop==0.85.1",
     "pre_commit",
-    "black",
-    "isort",
+    "ruff",
 ]
 
 [tool.flet]
-desktop_flavor = "full"    # light Change to "full" to use flet-audio and flet-video
+desktop_flavor = "full"    # "light" Change to "full" to use flet-audio and flet-video
 org = "org.foundation101"
 product = "CodeUA"
 description = "Щоденне вшанування пам’яті Героїв України. Хвилина мовчання та Гімн"
@@ -43,10 +42,9 @@ path = "src"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.black]
+[tool.ruff]
 line-length = 88
-target-version = ['py312']
-skip-string-normalization = true
+target-version = "py312"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.format]
+quote-style = "preserve"

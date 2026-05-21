@@ -82,7 +82,6 @@ def build_main_view(
         """Фоновий таск оновлення інтерфейсу"""
 
         while True:
-
             try:
                 if timer.value != box.time_left:
                     timer.value = box.time_left
@@ -255,7 +254,6 @@ async def main(page: ft.Page):
         box.global_task_is_running = True
 
         while True:
-
             hours, minutes, seconds = utils.check_delta(**box.alarm_time)
 
             if box.alarm_on and hours == minutes == seconds == 0:

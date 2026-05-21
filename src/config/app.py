@@ -10,7 +10,6 @@ meta = metadata("codeua")
 
 
 class Settings(BaseModel):
-
     @staticmethod
     def get_asset_dir() -> Path:
         default_assets_dir = Path(__file__).resolve().parent.parent / "assets"

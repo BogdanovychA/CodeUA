@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 
 class Settings(BaseModel):
-
     title_size: int = 24
     text_size: int = 20
 
