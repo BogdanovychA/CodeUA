@@ -16,7 +16,7 @@ dependencies = [
     "httpx==0.28.1",
     "pydantic-settings==2.14.1",
     "pydantic==2.13.4",
-    "measurement-api>=0.1.0",
+    "measurement-api==0.2.0",
 ]
 
 [dependency-groups]

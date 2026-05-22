@@ -9,13 +9,13 @@ import flet as ft
 import flet_audio as fta
 from flet_storage import FletStorage
 from fluent_manager import FluentManager
-
-from config import app, default, google_analytics as ga_config, style
-from config.sound import playlist
 from measurement_api import MeasurementAPI
+
+from config import app, default, style
+from config import google_analytics as ga_config
+from config.sound import playlist
 from routes import about, author, error404, root, settings
-from utils import elements
-from utils import utils
+from utils import elements, utils
 from utils.models import PandorasBox, Track
 
 logging.basicConfig(
@@ -314,9 +314,7 @@ async def main(page: ft.Page):
     box = PandorasBox(
         storage=FletStorage(app.settings.name),
         analytics=MeasurementAPI(
-            m10t_id=ga_config.settings.id,
-            secret_key=ga_config.settings.secret_key,
-            debug=ga_config.settings.debug,
+            **ga_config.settings.model_dump(),
         ),
     )
 
