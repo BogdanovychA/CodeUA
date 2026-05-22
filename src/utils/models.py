@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     import flet_audio as fta
     from flet_storage import FletStorage
     from fluent_manager import FluentManager
+    from measurement_api import MeasurementAPI
 
 
 class Track(StrEnum):
@@ -36,6 +37,7 @@ class PandorasBox:
     storage: FletStorage
     lang: FluentManager | None = None
     audio: fta.Audio | None = None
+    analytics: MeasurementAPI | None = None
 
     # State variables
     audio_state: fta.AudioState | None = None

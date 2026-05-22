@@ -10,11 +10,11 @@ import flet_audio as fta
 from flet_storage import FletStorage
 from fluent_manager import FluentManager
 
-from config import app, default, style
+from config import app, default, google_analytics as ga_config, style
 from config.sound import playlist
+from measurement_api import MeasurementAPI
 from routes import about, author, error404, root, settings
 from utils import elements
-from utils import measurement_api as ga
 from utils import utils
 from utils.models import PandorasBox, Track
 
@@ -216,13 +216,14 @@ async def main(page: ft.Page):
     async def route_change():
         """Обробник перемикання екранів"""
 
-        page.run_task(
-            ga.log_event,
-            box.client_id,
-            str(page.platform.value),
-            "route_change",
-            page.route,
-        )
+        if box.analytics:
+            page.run_task(
+                box.analytics.log_event,
+                box.client_id,
+                "route_change",
+                platform=str(page.platform.value),
+                page_path=page.route,
+            )
 
         if box.ui_update_task:
             box.ui_update_task.cancel()
@@ -312,6 +313,11 @@ async def main(page: ft.Page):
 
     box = PandorasBox(
         storage=FletStorage(app.settings.name),
+        analytics=MeasurementAPI(
+            m10t_id=ga_config.settings.id,
+            secret_key=ga_config.settings.secret_key,
+            debug=ga_config.settings.debug,
+        ),
     )
 
     await _init()
