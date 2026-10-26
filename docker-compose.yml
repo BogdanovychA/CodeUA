@@ -1,13 +1,11 @@
-name: codeua
-
 services:
-  minigames:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
     image: codeua:${APP_VERSION}
     pull_policy: missing
-    container_name: codeua
+    container_name: codeua-foundation101-org
     restart: always
     env_file:
       - src/assets/.env
@@ -16,3 +14,12 @@ services:
       - ./src/assets/sounds:/app/src/assets/sounds
     ports:
       - "8006:8000"
+
+  cloudflared:
+#    image: cloudflare/cloudflared:latest
+    image: cloudflare/cloudflared:2026.7.3
+    container_name: codeua-foundation101-org-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE__TUNNEL_TOKEN}
+    depends_on:
+      - web
