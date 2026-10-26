@@ -1,0 +1,21 @@
+name: Local Server Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy on host via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SING_SSH_HOST }}
+          username: ${{ secrets.SING_SSH_USER }}
+          key: ${{ secrets.SING_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SING_SSH_PORT }}
+          script: |
+            cd /home/ab/www/codeua.foundation101.org
+            git pull origin main
