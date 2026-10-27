@@ -1,3 +1,5 @@
+name: codeua.foundation101.org
+
 services:
   web:
     build:
@@ -5,7 +7,6 @@ services:
       dockerfile: Dockerfile
     image: codeua:${APP_VERSION}
     pull_policy: missing
-    container_name: codeua-foundation101-org
     restart: always
     env_file:
       - src/assets/.env
@@ -18,7 +19,6 @@ services:
   cloudflared:
 #    image: cloudflare/cloudflared:latest
     image: cloudflare/cloudflared:2026.10.3
-    container_name: codeua-foundation101-org-cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token ${CLOUDFLARE__TUNNEL_TOKEN}
     depends_on:
