@@ -17,5 +17,7 @@ jobs:
           key: ${{ secrets.SING_SSH_PRIVATE_KEY }}
           port: ${{ secrets.SING_SSH_PORT }}
           script: |
+            set -e
             cd /home/ab/www/codeua.foundation101.org
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
